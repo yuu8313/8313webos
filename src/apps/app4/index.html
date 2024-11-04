@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マークダウンエディター</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://github.com/yuu8313/markdownedit/blob/main/%E3%83%95%E3%82%A1%E3%83%93%E3%82%B3%E3%83%B3/%E3%83%95%E3%82%A1%E3%83%93%E3%82%B3%E3%83%B3.png?raw=true" type="image/png">
+</head>
+<body class="dark-theme">
+    <header>
+        <h1>マークダウンエディター</h1>
+    </header>
+    <main>
+        <div class="editor-container">
+            <textarea id="markdown-input" placeholder="マークダウンを入力してください..."></textarea>
+            <div id="preview-pane"></div>
+        </div>
+        <div class="controls">
+            <select id="download-format">
+                <option value="md">Markdown</option>
+                <option value="html">HTML</option>
+                <option value="plain-html">Plain-HTML(普通のHTML)</option>
+                <option value="txt">TXT</option>
+                <option value="pdf">PDF</option>
+                <option value="csv">CSV</option>
+                <option value="svg">SVG</option>
+            </select>
+            <button id="download-btn">ダウンロード</button>
+            <button id="copy-btn">コピー</button>
+            <button id="clear-btn">クリア</button>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

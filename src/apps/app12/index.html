@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL埋め込み</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* スクロールを無効化 */
+        }
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .input-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background-color: #333;
+            border: 2px solid #ff6600;
+            color: #fff;
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            box-shadow: 0 0 15px #ff6600;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #ff6600;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        button:hover {
+            background-color: #ff8533;
+            box-shadow: 0 0 15px #ff6600;
+        }
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ff6600;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .go-text {
+            display: none;
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff6600;
+            margin: 20px 0;
+        }
+        .url-container {
+            display: none;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            word-wrap: break-word;
+            height: 100%; /* 全画面表示 */
+        }
+        .url-text {
+            font-size: 16px;
+            color: #ff6600;
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            z-index: 999; /* フォームなどの上に表示 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="inputSection">
+        <h1>ページの埋め込み</h1>
+        <div class="input-container">
+            <input type="text" id="urlInput" placeholder="ここにURLを入力してください" onkeypress="handleKeyPress(event)">
+        </div>
+        <button onclick="generateURL()">URLを生成</button>
+        <div class="loader" id="loader"></div>
+        <div class="go-text" id="goText">GO</div>
+    </div>
+    
+    <div class="url-container" id="urlContainer">
+        <p class="url-text" id="generatedURL"></p>
+        <iframe id="previewFrame" src="about:blank"></iframe>
+    </div>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                generateURL();
+            }
+        }
+
+        function generateURL() {
+            const input = document.getElementById('urlInput').value.trim();
+            const loader = document.getElementById('loader');
+            const goText = document.getElementById('goText');
+            const urlContainer = document.getElementById('urlContainer');
+            const generatedURL = document.getElementById('generatedURL');
+            const previewFrame = document.getElementById('previewFrame');
+            const inputSection = document.getElementById('inputSection');
+
+            if (input === '') {
+                alert('URLを入力してください');
+                return;
+            }
+
+            // 入力が "https://" で始まっていない場合、自動的に追加する
+            let formattedURL = input;
+            if (!/^https?:\/\//i.test(input)) {
+                formattedURL = 'https://' + input;
+            }
+
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                goText.style.display = 'block';
+                
+                setTimeout(() => {
+                    goText.style.display = 'none';
+                    urlContainer.style.display = 'block';
+                    generatedURL.textContent = formattedURL;
+                    previewFrame.src = formattedURL;
+
+                    // 自動スクロール
+                    setTimeout(() => {
+                        inputSection.style.display = 'none'; // 入力セクションを非表示
+                        document.body.style.overflow = 'hidden'; // スクロール禁止
+                    }, 1000);
+
+                }, 2000);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
