@@ -40,6 +40,11 @@ class ShortcutManager {
             if (calcApp) applicationManager.launchApplication(calcApp);
         }, 'ブックマーク保存を開く', 'L');
 
+        this.registerShortcut('p', () => {
+            const calcApp = applicationManager.apps.find(app => app.id === 'privacyOS');
+            if (calcApp) applicationManager.launchApplication(calcApp);
+        }, 'privacyOSを開く', 'L');
+
         this.registerShortcut('w', () => {
             if (windowManager.activeWindow) {
                 windowManager.closeWindow(windowManager.activeWindow.id);

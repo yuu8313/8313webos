@@ -9,6 +9,7 @@ class ApplicationManager {
             { id: 'memotyou', name: '8313メモ', path: 'src/apps/app27/src/index.html', icon: 'src/image/icon27.png', iconType: 'image' },
             { id: 'txtEditor', name: '8313テキストエディター', path: 'src/apps/app37/index.html', icon: 'src/image/icon37.png', iconType: 'image' },
             { id: 'bookmark', name: '8313ブックマーク保存', path: 'src/apps/app28/index.html', icon: 'src/image/icon28.png', iconType: 'image' },
+            { id: 'privacyOS', name: '8313privacyOS', path: 'src/apps/app29/index.html', icon: 'src/image/icon29.png', iconType: 'image' },
         ];
 
         /*

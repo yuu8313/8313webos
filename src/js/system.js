@@ -155,6 +155,14 @@ class SystemManager {
                     if (calendarApp) applicationManager.launchApplication(calendarApp);
                 }
             },
+            { 
+                label: 'privacyOSを開く', 
+                icon: '🤫',
+                action: () => {
+                    const calendarApp = applicationManager.apps.find(app => app.id === 'privacyOS');
+                    if (calendarApp) applicationManager.launchApplication(calendarApp);
+                }
+            },
             { type: 'separator' },
             { 
                 label: '更新', 
