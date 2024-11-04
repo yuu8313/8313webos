@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mac風のメモ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            position: relative;
+        }
+
+        .desktop {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 80px);
+        }
+
+.app-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.app-icon-image {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s;
+}
+
+/* ホバー効果は .app-icon-image のみ適用 */
+.app-icon-image:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+        .app-icon-label {
+            font-size: 12px;
+            word-break: break-word;
+        }
+
+        .dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .dock-item {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dock-item:hover {
+            transform: scale(1.1);
+        }
+
+        .window {
+            position: absolute;
+            min-width: 400px;
+            min-height: 300px;
+            background: rgba(28, 28, 38, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .window-header {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: move;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27c93f; }
+
+        .window-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .window-content {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .window-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            bottom: 0;
+            right: 0;
+            cursor: se-resize;
+        }
+
+        @keyframes windowOpen {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .window.opening {
+            animation: windowOpen 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop" id="desktop"></div>
+    <div class="dock" id="dock"></div>
+
+<script>
+    const apps = [
+        { name: 'メモ帳', icon: '📝', path: 'app/notes/notes.html' },
+        { name: '付箋メモ帳', icon: '🔖', path: 'app/husen/husen.html' },
+        { name: 'チャットメモ帳', icon: '💬', path: 'app/chat/chat.html' },
+        { name: 'TODOメモ帳', icon: '✅', path: 'app/todo/todo.html' },
+        { name: 'フォルダー階層メモ', icon: '📁', path: 'app/folder/index.html' },
+    ];
+
+    let windows = [];
+    let activeWindow = null;
+    let highestZIndex = 1;
+
+    // デスクトップにアプリアイコンを表示
+    function createDesktopIcons() {
+        const desktop = document.getElementById('desktop');
+        apps.forEach(app => {
+            const icon = document.createElement('div');
+            icon.className = 'app-icon';
+            icon.innerHTML = `
+                <div class="app-icon-image">${app.icon}</div>
+                <div class="app-icon-label">${app.name}</div>
+            `;
+
+            // .app-icon-image にのみクリックイベントをバインド
+            icon.querySelector('.app-icon-image').addEventListener('click', () => openApp(app));
+            desktop.appendChild(icon);
+        });
+    }
+
+    function createWindow(app) {
+        const window = document.createElement('div');
+        window.className = 'window opening';
+        window.style.left = '50px';
+        window.style.top = '50px';
+        window.style.zIndex = ++highestZIndex;
+
+        window.innerHTML = `
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="control-btn close"></div>
+                    <div class="control-btn minimize"></div>
+                    <div class="control-btn maximize"></div>
+                </div>
+                <div class="window-title">${app.name}</div>
+            </div>
+            <div class="window-content">
+                <iframe src="${app.path}"></iframe>
+                <div class="resize-handle"></div>
+            </div>
+        `;
+
+        document.body.appendChild(window);
+        windows.push({ element: window, app });
+
+        // ウィンドウのドラッグ機能
+        const header = window.querySelector('.window-header');
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+
+        header.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            initialX = e.clientX - window.offsetLeft;
+            initialY = e.clientY - window.offsetTop;
+            window.style.zIndex = ++highestZIndex;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                window.style.left = `${currentX}px`;
+                window.style.top = `${currentY}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // リサイズ機能
+        const resizeHandle = window.querySelector('.resize-handle');
+        let isResizing = false;
+        let initialWidth;
+        let initialHeight;
+
+        resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            initialWidth = window.offsetWidth;
+            initialHeight = window.offsetHeight;
+            initialX = e.clientX;
+            initialY = e.clientY;
+            e.stopPropagation();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isResizing) {
+                const width = initialWidth + (e.clientX - initialX);
+                const height = initialHeight + (e.clientY - initialY);
+                window.style.width = `${Math.max(400, width)}px`;
+                window.style.height = `${Math.max(300, height)}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isResizing = false;
+        });
+
+        // コントロールボタンの機能
+        const closeBtn = window.querySelector('.close');
+        const minimizeBtn = window.querySelector('.minimize');
+        const maximizeBtn = window.querySelector('.maximize');
+
+        closeBtn.addEventListener('click', () => {
+            window.remove();
+            windows = windows.filter(w => w.element !== window);
+            removeDockIcon(app);
+        });
+
+        minimizeBtn.addEventListener('click', () => {
+            window.style.display = 'none';
+            addDockIcon(app);
+        });
+
+        maximizeBtn.addEventListener('click', () => {
+            if (window.style.width === '100vw') {
+                window.style.width = '800px';
+                window.style.height = '600px';
+                window.style.top = '50px';
+                window.style.left = '50px';
+            } else {
+                window.style.width = '100vw';
+                window.style.height = '100vh';
+                window.style.top = '0';
+                window.style.left = '0';
+            }
+        });
+
+        return window;
+    }
+
+    function addDockIcon(app) {
+        const dock = document.getElementById('dock');
+        const icon = document.createElement('div');
+        icon.className = 'dock-item';
+        icon.innerHTML = app.icon;
+        icon.addEventListener('click', () => {
+            const window = windows.find(w => w.app === app);
+            if (window) {
+                window.element.style.display = 'flex';
+                window.element.style.zIndex = ++highestZIndex;
+                icon.remove();
+            }
+        });
+        dock.appendChild(icon);
+    }
+
+    function removeDockIcon(app) {
+        const dock = document.getElementById('dock');
+        const icons = dock.querySelectorAll('.dock-item');
+        icons.forEach(icon => {
+            if (icon.innerHTML === app.icon) {
+                icon.remove();
+            }
+        });
+    }
+
+    function openApp(app) {
+        const existingWindow = windows.find(w => w.app === app);
+        if (existingWindow) {
+            existingWindow.element.style.display = 'flex';
+            existingWindow.element.style.zIndex = ++highestZIndex;
+            removeDockIcon(app);
+        } else {
+            createWindow(app);
+        }
+    }
+
+    // 初期化
+    createDesktopIcons();
+</script>
+
+
+</body>
+</html>

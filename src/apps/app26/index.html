@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ハッカータイパー Pro</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000;
+            color: #0f0;
+            overflow: hidden;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        #dropZone {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #0f0;
+            margin: 20px;
+            transition: all 0.3s;
+        }
+        #dropZone.active {
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+        #codeArea {
+            flex: 1;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            padding: 20px;
+            background-color: rgba(0, 30, 0, 0.3);
+            border: 1px solid #0f0;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        #controls {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 30, 0, 0.5);
+        }
+        select, button {
+            background-color: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        button:hover, select:hover {
+            background-color: #0f0;
+            color: #000;
+        }
+        #toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #0f0;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="dropZone">ファイルをドラッグ&ドロップ、またはここをクリックしてファイルをアップロード</div>
+        <div id="codeArea"></div>
+        <div id="controls">
+            <div>
+                <select id="colorSelect">
+                    <option value="#0f0">緑</option>
+                    <option value="#f00">赤</option>
+                    <option value="#f0f">紫</option>
+                    <option value="#ff0">黄色</option>
+                    <option value="#00f">青</option>
+                    <option value="#ffa500">オレンジ</option>
+                </select>
+                <select id="modeSelect">
+                    <option value="text">テキストモード</option>
+                    <option value="binary">バイナリモード</option>
+                    <option value="base64">Base64モード</option>
+                </select>
+            </div>
+            <div>
+                <button id="modeToggle">自動モード</button>
+                <button id="resetButton">リセット</button>
+            </div>
+        </div>
+    </div>
+    <div id="toast"></div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const codeArea = document.getElementById('codeArea');
+        const colorSelect = document.getElementById('colorSelect');
+        const modeSelect = document.getElementById('modeSelect');
+        const modeToggle = document.getElementById('modeToggle');
+        const resetButton = document.getElementById('resetButton');
+        const toast = document.getElementById('toast');
+        let fileContent = '';
+        let currentIndex = 0;
+        let isAutoMode = true;
+        let intervalId = null;
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        dropZone.ondragover = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('active');
+        };
+
+        dropZone.ondragleave = () => {
+            dropZone.classList.remove('active');
+        };
+
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('active');
+            const file = e.dataTransfer.files[0];
+            readFile(file);
+        };
+
+        dropZone.onclick = () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                readFile(file);
+            };
+            input.click();
+        };
+
+        function readFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const mode = modeSelect.value;
+                if (mode === 'text') {
+                    fileContent = e.target.result;
+                } else if (mode === 'binary') {
+                    const uint8Array = new Uint8Array(e.target.result);
+                    fileContent = Array.from(uint8Array, byte => byte.toString(16).padStart(2, '0')).join(' ');
+                } else if (mode === 'base64') {
+                    fileContent = btoa(String.fromCharCode.apply(null, new Uint8Array(e.target.result)));
+                }
+                currentIndex = 0;
+                codeArea.textContent = '';
+                dropZone.style.display = 'none';
+                codeArea.style.display = 'block';
+                if (isAutoMode) {
+                    startAutoTyping();
+                }
+                showToast(`${file.name} をアップロードしました`);
+            };
+            if (modeSelect.value === 'text') {
+                reader.readAsText(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function startAutoTyping() {
+            clearInterval(intervalId);
+            intervalId = setInterval(() => {
+                typeNextChunk();
+            }, 50);
+        }
+
+        function typeNextChunk() {
+            const chunkSize = Math.floor(Math.random() * 3) + 1;
+            const chunk = fileContent.substr(currentIndex, chunkSize);
+            codeArea.textContent += chunk;
+            currentIndex += chunkSize;
+            if (currentIndex >= fileContent.length) {
+                currentIndex = 0;
+            }
+            codeArea.scrollTop = codeArea.scrollHeight;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!isAutoMode && fileContent) {
+                typeNextChunk();
+            }
+        });
+
+        colorSelect.onchange = (e) => {
+            codeArea.style.color = e.target.value;
+        };
+
+        modeToggle.onclick = () => {
+            isAutoMode = !isAutoMode;
+            modeToggle.textContent = isAutoMode ? '自動モード' : '手動モード';
+            if (isAutoMode && fileContent) {
+                startAutoTyping();
+            } else {
+                clearInterval(intervalId);
+            }
+        };
+
+        resetButton.onclick = () => {
+            dropZone.style.display = 'flex';
+            codeArea.style.display = 'none';
+            codeArea.textContent = '';
+            fileContent = '';
+            currentIndex = 0;
+            clearInterval(intervalId);
+            showToast('リセットしました');
+        };
+
+        modeSelect.onchange = () => {
+            if (fileContent) {
+                showToast('新しいモードを適用するには、ファイルを再アップロードしてください');
+            }
+        };
+    </script>
+</body>
+</html>

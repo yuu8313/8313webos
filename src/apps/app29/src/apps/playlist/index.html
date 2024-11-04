@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシー重視 YouTube プレイリストメーカー 🔒</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-bg: #0a0f1c;
+            --secondary-bg: #1a1f2c;
+            --accent: #3366ff;
+            --text: #ffffff;
+            --error: #ff4444;
+            --success: #44ff44;
+            --lock-color: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background: var(--main-bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            display: grid;
+            gap: 10px;
+        }
+
+        input, button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            margin: 5px;
+            font-size: 1rem;
+        }
+
+        input {
+            width: 100%;
+            background: var(--secondary-bg);
+            color: var(--text);
+            border: 1px solid var(--accent);
+        }
+
+        button {
+            background: var(--accent);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .player-container {
+            margin: 20px 0;
+            position: relative;
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .playlist {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--main-bg);
+            margin: 10px 0;
+            border-radius: 8px;
+            gap: 10px;
+            transition: transform 0.2s;
+        }
+
+        .playlist-item:hover {
+            transform: translateX(5px);
+        }
+
+        .playlist-item.locked {
+            border: 2px solid var(--lock-color);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background: var(--success);
+            color: var(--main-bg);
+            animation: slideIn 0.5s ease-out;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 12px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 12px;
+            z-index: 2000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .recording {
+            background: var(--error);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 プライバシー重視 YouTube プレイリストメーカー</h1>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="YouTube URLを入力してください">
+            <input type="text" id="playlistName" placeholder="プレイリスト名を入力">
+            <input type="password" id="playlistPassword" placeholder="プレイリストのパスワードを設定 (任意)">
+            <button onclick="addToPlaylist()">🔐 プレイリストに追加</button>
+        </div>
+
+        <div class="player-container">
+            <div id="player"></div>
+            <button onclick="togglePopupPlayer()">🎬 シアター再生</button>
+            <button id="recordButton" onclick="toggleRecording()">📹 録画開始</button>
+        </div>
+
+        <div class="playlist" id="playlist">
+            <h2>🔒 プライバシー保護されたプレイリスト</h2>
+            <div id="playlistItems"></div>
+        </div>
+    </div>
+
+    <div class="popup-player" id="popupPlayer"></div>
+    <div class="notification" id="notification"></div>
+
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="password-modal" id="passwordModal">
+        <h3>🔒 パスワードを入力</h3>
+        <input type="password" id="passwordInput" placeholder="パスワードを入力">
+        <button id="submitPassword">確認</button>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+        let currentPasswordCheck = null;
+        
+        // ローカルストレージキー
+        const STORAGE_KEY = 'privacyOS8313playlistYoutube';
+        const PASSWORD_KEY = '8313privacyplaylist';
+
+        // パスワード保存関数
+        function savePassword(playlistId, password) {
+            const passwords = JSON.parse(localStorage.getItem(PASSWORD_KEY) || '{}');
+            passwords[playlistId] = password;
+            localStorage.setItem(PASSWORD_KEY, JSON.stringify(passwords));
+        }
+
+        // パスワード検証関数
+        function verifyPassword(playlistId, inputPassword) {
+            const passwords = JSON.parse(localStorage.getItem(PASSWORD_KEY) || '{}');
+            return passwords[playlistId] === inputPassword;
+        }
+
+        // 通知を表示する関数
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // パスワードモーダルを表示
+        function showPasswordModal(callback) {
+            document.getElementById('modalOverlay').style.display = 'block';
+            document.getElementById('passwordModal').style.display = 'block';
+            currentPasswordCheck = callback;
+        }
+
+        // パスワードモーダルを非表示
+        function hidePasswordModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            document.getElementById('passwordModal').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        // YouTube URLから動画IDを抽出
+        function getVideoId(url) {
+            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // 埋め込みコードを生成
+        function generateEmbedCode(videoId) {
+            return `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        }
+
+        // プレイリストをローカルストレージに保存
+        function savePlaylist(playlist) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(playlist));
+        }
+
+        // プレイリストをローカルストレージから読み込み
+        function loadPlaylist() {
+            const playlist = localStorage.getItem(STORAGE_KEY);
+            return playlist ? JSON.parse(playlist) : [];
+        }
+
+        // プレイリストに追加
+        function addToPlaylist() {
+            const urlInput = document.getElementById('urlInput');
+            const playlistNameInput = document.getElementById('playlistName');
+            const passwordInput = document.getElementById('playlistPassword');
+            const url = urlInput.value.trim();
+            const playlistName = playlistNameInput.value.trim() || '無名のプレイリスト';
+            const password = passwordInput.value.trim();
+            
+            const videoId = getVideoId(url);
+            if (!videoId) {
+                showNotification('❌ 無効なYouTube URLです');
+                return;
+            }
+
+            const embedCode = generateEmbedCode(videoId);
+            const playlist = loadPlaylist();
+            const playlistId = Date.now().toString();
+            
+            const newItem = {
+                id: playlistId,
+                name: playlistName,
+                url: url,
+                embedCode: embedCode,
+                timestamp: new Date().toISOString(),
+                isLocked: !!password
+            };
+
+            if (password) {
+                savePassword(playlistId, password);
+            }
+
+            playlist.push(newItem);
+            savePlaylist(playlist);
+            updatePlaylistDisplay();
+            
+            urlInput.value = '';
+            playlistNameInput.value = '';
+            passwordInput.value = '';
+            showNotification('✅ プレイリストに追加しました');
+        }
+
+        // プレイリストの表示を更新
+        function updatePlaylistDisplay() {
+            const playlistItems = document.getElementById('playlistItems');
+            const playlist = loadPlaylist();
+            
+            playlistItems.innerHTML = playlist.map((item, index) => `
+                <div class="playlist-item ${item.isLocked ? 'locked' : ''}">
+                    <span>${item.isLocked ? '🔒' : '🔓'} ${item.name}</span>
+                    <button onclick="playVideo(${index})">${item.isLocked ? '🔒 再生' : '▶️ 再生'}</button>
+                    <button onclick="removeFromPlaylist(${index})">🗑️ 削除</button>
+                    <button onclick="copyEmbedCode(${index})">📋 埋め込みコード</button>
+                </div>
+            `).join('');
+        }
+
+        // プレイリストから削除
+        function removeFromPlaylist(index) {
+            const playlist = loadPlaylist();
+            const item = playlist[index];
+
+            if (item.isLocked) {
+                showPasswordModal((password) => {
+                    if (verifyPassword(item.id, password)) {
+                        playlist.splice(index, 1);
+                        savePlaylist(playlist);
+                        updatePlaylistDisplay();
+                        showNotification('✅ 削除しました');
+                        hidePasswordModal();
+                    } else {
+                        showNotification('❌ パスワードが違います');
+                    }
+                });
+            } else {
+                playlist.splice(index, 1);
+                savePlaylist(playlist);
+                updatePlaylistDisplay();
+                showNotification('✅ 削除しました');
+            }
+        }
+
+        // 埋め込みコードをクリップボードにコピー
+        function copyEmbedCode(index) {
+            const playlist = loadPlaylist();
+            const item = playlist[index];
+
+            if (item.isLocked) {
+                showPasswordModal((password) => {
+                    if (verifyPassword(item.id, password)) {
+                        navigator.clipboard.writeText(item.embedCode)
+                            .then(() => {
+                                showNotification('✅ 埋め込みコードをコピーしました');
+                                hidePasswordModal();
+                            });
+                    } else {
+                        showNotification('❌ パスワードが違います');
+                    }
+                });
+            } else {
+                navigator.clipboard.writeText(item.embedCode)
+                    .then(() => showNotification('✅ 埋め込みコードをコピーしました'));
+            }
+        }
+
+        // 動画を再生
+        function playVideo(index) {
+            const playlist = loadPlaylist();
+            const item = playlist[index];
+
+            if (item.isLocked) {
+                showPasswordModal((password) => {
+                    if (verifyPassword(item.id, password)) {
+                        const player = document.getElementById('player');
+                        player.innerHTML = item.embedCode;
+                        hidePasswordModal();
+                    } else {
+                        showNotification('❌ パスワードが違います');
+                    }
+                });
+            } else {
+                const player = document.getElementById('player');
+                player.innerHTML = item.embedCode;
+            }
+        }
+
+        // パスワード確認のイベントリスナー
+        document.getElementById('submitPassword').addEventListener('click', () => {
+            const password = document.getElementById('passwordInput').value;
+            if (currentPasswordCheck) {
+                currentPasswordCheck(password);
+            }
+        });
+
+        // ポップアップ再生を切り替え
+        function togglePopupPlayer() {
+            const popupPlayer = document.getElementById('popupPlayer');
+            const player = document.getElementById('player');
+            
+            if (popupPlayer.style.display === 'none' || !popupPlayer.style.display) {
+                popupPlayer.style.display = 'block';
+                popupPlayer.innerHTML = player.innerHTML;
+                player.innerHTML = '';
+            } else {
+                popupPlayer.style.display = 'none';
+                player.innerHTML = popupPlayer.innerHTML;
+                popupPlayer.innerHTML = '';
+            }
+        }
+
+        // 録画機能の切り替え
+        async function toggleRecording() {
+            const recordButton = document.getElementById('recordButton');
+            
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                    recordedChunks = [];
+                    mediaRecorder = new MediaRecorder(stream);
+                    
+                    mediaRecorder.ondataavailable = (e) => {
+                        if (e.data.size > 0) {
+                            recordedChunks.push(e.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'recording.webm';
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordButton.textContent = '📹 録画停止';
+                    recordButton.classList.add('recording');
+                    showNotification('✅ 録画を開始しました');
+                } catch (err) {
+                    showNotification('❌ 録画の開始に失敗しました');
+                    console.error(err);
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                recordButton.textContent = '📹 録画開始';
+                recordButton.classList.remove('recording');
+                showNotification('✅ 録画を保存しました');
+            }
+        }
+
+        // 初期表示
+        updatePlaylistDisplay();
+    </script>
+</body>
+</html>

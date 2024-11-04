@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrivacyOS Memo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            height: 100vh;
+            display: flex;
+        }
+
+        .notes-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .notes-list {
+            width: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .note-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            word-break: break-all;
+        }
+
+        .note-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .note-item.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .editor {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .toolbar {
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        button.danger {
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        button.danger:hover {
+            background: rgba(255, 0, 0, 0.3);
+        }
+
+        textarea {
+            flex-grow: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            resize: none;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .privacy-notice {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: none;
+        }
+
+        #lockScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        #password {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="lockScreen">
+        <input type="password" id="password" placeholder="パスワードを入力" />
+        <button onclick="unlock()">ロック解除</button>
+    </div>
+
+    <div class="notes-container">
+        <div class="notes-list" id="notesList"></div>
+        <div class="editor">
+            <div class="toolbar">
+                <div class="toolbar-group">
+                    <button onclick="createNote()">新規ノート</button>
+                    <button onclick="saveNote()">保存</button>
+                    <button onclick="deleteNote()" class="danger">削除</button>
+                </div>
+                <div class="toolbar-group">
+                    <button onclick="lock()">ロック</button>
+                    <button onclick="clearAllData()" class="danger">全データ削除</button>
+                </div>
+            </div>
+            <textarea id="noteContent" placeholder="ここに内容を入力..."></textarea>
+        </div>
+    </div>
+    <div class="privacy-notice" id="privacyNotice">暗号化して保存しました</div>
+
+    <script>
+        const STORAGE_KEY = 'privacyos-memo';
+        const PASSWORD_HASH_KEY = 'privacyos-memo-hash';
+        let notes = [];
+        let currentNoteId = null;
+        let autoSaveTimeout = null;
+
+        // 暗号化関数
+        async function encrypt(text, key) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hash = await crypto.subtle.digest('SHA-256', encoder.encode(key));
+            const encryptKey = await crypto.subtle.importKey(
+                'raw',
+                hash,
+                { name: 'AES-GCM' },
+                false,
+                ['encrypt']
+            );
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv: iv },
+                encryptKey,
+                data
+            );
+            return {
+                data: Array.from(new Uint8Array(encrypted)),
+                iv: Array.from(iv)
+            };
+        }
+
+        // 復号化関数
+        async function decrypt(encryptedData, iv, key) {
+            const encoder = new TextEncoder();
+            const hash = await crypto.subtle.digest('SHA-256', encoder.encode(key));
+            const decryptKey = await crypto.subtle.importKey(
+                'raw',
+                hash,
+                { name: 'AES-GCM' },
+                false,
+                ['decrypt']
+            );
+            const decrypted = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: new Uint8Array(iv) },
+                decryptKey,
+                new Uint8Array(encryptedData)
+            );
+            return new TextDecoder().decode(decrypted);
+        }
+
+        // パスワードのハッシュ化
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash));
+        }
+
+        async function unlock() {
+            const password = document.getElementById('password').value;
+            const storedHash = JSON.parse(localStorage.getItem(PASSWORD_HASH_KEY));
+            const inputHash = await hashPassword(password);
+            
+            if (!storedHash) {
+                // 初回設定
+                localStorage.setItem(PASSWORD_HASH_KEY, JSON.stringify(inputHash));
+                document.getElementById('lockScreen').style.display = 'none';
+                loadNotes(password);
+            } else if (JSON.stringify(inputHash) === JSON.stringify(storedHash)) {
+                document.getElementById('lockScreen').style.display = 'none';
+                loadNotes(password);
+            } else {
+                alert('パスワードが違います');
+            }
+        }
+
+        function lock() {
+            document.getElementById('lockScreen').style.display = 'flex';
+            document.getElementById('password').value = '';
+            notes = [];
+            currentNoteId = null;
+            renderNotesList();
+            document.getElementById('noteContent').value = '';
+        }
+
+        async function loadNotes(password) {
+            const encryptedData = localStorage.getItem(STORAGE_KEY);
+            if (encryptedData) {
+                try {
+                    const { data, iv } = JSON.parse(encryptedData);
+                    const decrypted = await decrypt(data, iv, password);
+                    notes = JSON.parse(decrypted);
+                    renderNotesList();
+                    if (notes.length > 0) {
+                        loadNote(notes[0].id);
+                    }
+                } catch (error) {
+                    console.error('Failed to load notes:', error);
+                }
+            }
+        }
+
+        function renderNotesList() {
+            const notesList = document.getElementById('notesList');
+            notesList.innerHTML = '';
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement('div');
+                noteElement.className = `note-item ${note.id === currentNoteId ? 'active' : ''}`;
+                const preview = note.content.substring(0, 20) || `ノート ${index + 1}`;
+                noteElement.textContent = preview;
+                noteElement.onclick = () => loadNote(note.id);
+                notesList.appendChild(noteElement);
+            });
+        }
+
+        function createNote() {
+            const newNote = {
+                id: Date.now(),
+                content: ''
+            };
+            notes.push(newNote);
+            currentNoteId = newNote.id;
+            saveNotes();
+            renderNotesList();
+            document.getElementById('noteContent').value = '';
+        }
+
+        function loadNote(id) {
+            currentNoteId = id;
+            const note = notes.find(n => n.id === id);
+            document.getElementById('noteContent').value = note.content;
+            renderNotesList();
+        }
+
+        async function saveNotes() {
+            const password = document.getElementById('password').value;
+            const encrypted = await encrypt(JSON.stringify(notes), password);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(encrypted));
+            showPrivacyNotice();
+        }
+
+        function showPrivacyNotice() {
+            const notice = document.getElementById('privacyNotice');
+            notice.style.display = 'block';
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 2000);
+        }
+
+        function saveNote() {
+            if (currentNoteId) {
+                const content = document.getElementById('noteContent').value;
+                const noteIndex = notes.findIndex(n => n.id === currentNoteId);
+                if (noteIndex !== -1) {
+                    notes[noteIndex].content = content;
+                    saveNotes();
+                }
+            }
+        }
+
+        function deleteNote() {
+            if (currentNoteId && confirm('このノートを削除してもよろしいですか？')) {
+                notes = notes.filter(n => n.id !== currentNoteId);
+                currentNoteId = notes.length > 0 ? notes[0].id : null;
+                saveNotes();
+                renderNotesList();
+                if (currentNoteId) {
+                    loadNote(currentNoteId);
+                } else {
+                    document.getElementById('noteContent').value = '';
+                }
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('全てのデータを完全に削除します。この操作は取り消せません。よろしいですか？')) {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(PASSWORD_HASH_KEY);
+                location.reload();
+            }
+        }
+
+        // 自動保存
+        document.getElementById('noteContent').addEventListener('input', () => {
+            if (autoSaveTimeout) {
+                clearTimeout(autoSaveTimeout);
+            }
+            autoSaveTimeout = setTimeout(() => {
+                saveNote();
+            }, 1000);
+        });
+
+        // 画面を離れる前の警告
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = '';
+        });
+    </script>
+</body>
+</html>

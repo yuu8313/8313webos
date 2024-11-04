@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313画像編集</title>
+    <style>
+        :root {
+            --saxe-blue: #4e6e81;
+            --dark-bg: #0a0a0a;
+            --light-text: #e0e0e0;
+            --neon-blue: #00ffff;
+            --neon-purple: #ff00ff;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 20%);
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--saxe-blue);
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: transparent;
+            color: var(--light-text);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--neon-blue);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .tab:hover::before, .tab.active::before {
+            transform: scaleX(1);
+        }
+        .tab.active {
+            color: var(--neon-blue);
+        }
+        .tab-content {
+            display: none;
+            background-color: rgba(42, 42, 42, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        input[type="file"], input[type="number"], input[type="radio"], button {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: rgba(51, 51, 51, 0.7);
+            color: var(--light-text);
+            border: 1px solid var(--saxe-blue);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        input[type="number"], input[type="radio"] {
+            width: calc(50% - 10px);
+        }
+        button {
+            background-color: var(--saxe-blue);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            background-color: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        #imagePreview, #cropImagePreview {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        .dropzone {
+            border: 2px dashed var(--saxe-blue);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        .dropzone:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        .option-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .option-group label {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        #cropPreview {
+            position: relative;
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        #cropBox {
+            position: absolute;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'resize')">サイズ変更</button>
+            <button class="tab" onclick="openTab(event, 'crop')">切り抜き</button>
+        </div>
+
+        <div id="resize" class="tab-content active">
+            <div class="dropzone" id="resizeDropzone">
+                画像をドラッグ＆ドロップまたはクリックしてアップロード
+            </div>
+            <input type="file" id="resizeImageInput" accept="image/*" style="display: none;">
+            <div class="option-group">
+                <label>
+                    <input type="radio" id="pixelResize" name="resizeType" value="pixel" checked>
+                    ピクセルで変更
+                </label>
+                <label>
+                    <input type="radio" id="percentResize" name="resizeType" value="percent">
+                    パーセントで変更
+                </label>
+            </div>
+            <div id="pixelOptions">
+                <input type="number" id="widthInput" placeholder="幅 (px)">
+                <input type="number" id="heightInput" placeholder="高さ (px)">
+                <div>
+                    <label>
+                        <input type="checkbox" id="aspectRatio" checked>
+                        横縦比を維持
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="noEnlarge">
+                        縮小の場合は拡大しない
+                    </label>
+                </div>
+            </div>
+            <div id="percentOptions" style="display: none;">
+                <label>
+                    <input type="radio" id="percent75" name="percentValue" value="75">
+                    75%縮小
+                </label>
+                <label>
+                    <input type="radio" id="percent50" name="percentValue" value="50">
+                    50%縮小
+                </label>
+                <label>
+                    <input type="radio" id="percent25" name="percentValue" value="25">
+                    25%縮小
+                </label>
+            </div>
+            <button id="resizeButton">サイズ変換！</button>
+            <img id="imagePreview" src="" alt="プレビュー">
+        </div>
+
+        <div id="crop" class="tab-content">
+            <div class="dropzone" id="cropDropzone">
+                画像をドラッグ＆ドロップまたはクリックしてアップロード
+            </div>
+            <input type="file" id="cropImageInput" accept="image/*" style="display: none;">
+            <input type="number" id="cropWidth" placeholder="幅 (px)">
+            <input type="number" id="cropHeight" placeholder="高さ (px)">
+            <input type="number" id="cropX" placeholder="X位置 (px)">
+            <input type="number" id="cropY" placeholder="Y位置 (px)">
+            <button id="cropButton">切り抜き！</button>
+            <div id="cropPreview">
+                <img id="cropImagePreview" src="" alt="切り抜きプレビュー">
+                <div id="cropBox"></div>
+            </div>
+        </div>
+
+        <button id="downloadButton" style="display: none;">ダウンロード</button>
+    </div>
+
+    <script>
+        let resizeImage = null;
+        let cropImage = null;
+        let currentTab = 'resize';
+        let processedImageData = null;
+
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            currentTab = tabName;
+
+            // タブ切り替え時に画像データを削除
+            if (tabName === 'resize') {
+                cropImage = null;
+                document.getElementById('cropImagePreview').src = '';
+                document.getElementById('cropBox').style.display = 'none';
+            } else if (tabName === 'crop') {
+                resizeImage = null;
+                document.getElementById('imagePreview').src = '';
+            }
+
+            // ダウンロードボタンを非表示にする
+            document.getElementById('downloadButton').style.display = 'none';
+        }
+
+        function handleFileSelect(evt, imageType) {
+            const file = evt.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        if (imageType === 'resize') {
+                            resizeImage = img;
+                            updateImagePreview(resizeImage, 'imagePreview');
+                            document.getElementById('widthInput').value = resizeImage.width;
+                            document.getElementById('heightInput').value = resizeImage.height;
+                        } else if (imageType === 'crop') {
+                            cropImage = img;
+                            updateImagePreview(cropImage, 'cropImagePreview');
+                            document.getElementById('cropWidth').value = cropImage.width;
+                            document.getElementById('cropHeight').value = cropImage.height;
+                            document.getElementById('cropX').value = 0;
+                            document.getElementById('cropY').value = 0;
+                            updateCropPreview();
+                        }
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateImagePreview(img, previewId) {
+            const preview = document.getElementById(previewId);
+            preview.src = img.src;
+            preview.style.maxWidth = '100%';
+            preview.style.height = 'auto';
+        }
+
+        function resizeImageFunc() {
+            if (!resizeImage) return;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            let newWidth, newHeight;
+
+            if (document.getElementById('pixelResize').checked) {
+                newWidth = parseInt(document.getElementById('widthInput').value);
+                newHeight = parseInt(document.getElementById('heightInput').value);
+            } else {
+                const percent = document.querySelector('input[name="percentValue"]:checked').value;
+                newWidth = resizeImage.width * (percent / 100);
+                newHeight = resizeImage.height * (percent / 100);
+            }
+
+            if (document.getElementById('aspectRatio').checked) {
+                const ratio = resizeImage.width / resizeImage.height;
+                if (newWidth / newHeight > ratio) {
+                    newWidth = newHeight * ratio;
+                } else {
+                    newHeight = newWidth / ratio;
+                }
+            }
+
+            if (document.getElementById('noEnlarge').checked) {
+                newWidth = Math.min(newWidth, resizeImage.width);
+                newHeight = Math.min(newHeight, resizeImage.height);
+            }
+
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+            ctx.drawImage(resizeImage, 0, 0, newWidth, newHeight);
+
+            const resizedImage = new Image();
+            resizedImage.onload = function() {
+                updateImagePreview(resizedImage, 'imagePreview');
+            }
+            resizedImage.src = canvas.toDataURL('image/png');
+            
+            processedImageData = resizedImage.src;
+            showDownloadButton();
+        }
+
+        function cropImageFunc() {
+            if (!cropImage) return;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const cropWidth = parseInt(document.getElementById('cropWidth').value);
+            const cropHeight = parseInt(document.getElementById('cropHeight').value);
+            const cropX = parseInt(document.getElementById('cropX').value);
+            const cropY = parseInt(document.getElementById('cropY').value);
+
+            canvas.width = cropWidth;
+            canvas.height = cropHeight;
+            ctx.drawImage(cropImage, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+            const croppedImage = new Image();
+            croppedImage.onload = function() {
+                updateImagePreview(croppedImage, 'cropImagePreview');
+            }
+            croppedImage.src = canvas.toDataURL('image/png');
+            
+            processedImageData = croppedImage.src;
+            showDownloadButton();
+        }
+
+        function updateCropPreview() {
+            if (!cropImage) return;
+
+            const cropImagePreview = document.getElementById('cropImagePreview');
+            const cropBox = document.getElementById('cropBox');
+            const cropWidth = parseInt(document.getElementById('cropWidth').value);
+            const cropHeight = parseInt(document.getElementById('cropHeight').value);
+            const cropX = parseInt(document.getElementById('cropX').value);
+            const cropY = parseInt(document.getElementById('cropY').value);
+
+            cropImagePreview.src = cropImage.src;
+            cropImagePreview.style.maxWidth = '100%';
+            cropImagePreview.style.height = 'auto';
+
+            const scale = cropImagePreview.width / cropImage.width;
+            cropBox.style.width = `${cropWidth * scale}px`;
+            cropBox.style.height = `${cropHeight * scale}px`;
+            cropBox.style.left = `${cropX * scale}px`;
+            cropBox.style.top = `${cropY * scale}px`;
+            cropBox.style.display = 'block';
+        }
+
+        function showDownloadButton() {
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.style.display = 'block';
+        }
+
+        function downloadImage() {
+            if (processedImageData) {
+                const link = document.createElement('a');
+                link.download = 'processed_image.png';
+                link.href = processedImageData;
+                link.click();
+            }
+        }
+
+        document.getElementById('resizeImageInput').addEventListener('change', (e) => handleFileSelect(e, 'resize'));
+        document.getElementById('cropImageInput').addEventListener('change', (e) => handleFileSelect(e, 'crop'));
+        document.getElementById('resizeButton').addEventListener('click', resizeImageFunc);
+        document.getElementById('cropButton').addEventListener('click', cropImageFunc);
+        document.getElementById('downloadButton').addEventListener('click', downloadImage);
+
+        document.getElementById('widthInput').addEventListener('input', function() {
+            if (document.getElementById('aspectRatio').checked && resizeImage) {
+                const ratio = resizeImage.height / resizeImage.width;
+                document.getElementById('heightInput').value = Math.round(this.value * ratio);
+            }
+        });
+
+        document.getElementById('heightInput').addEventListener('input', function() {
+            if (document.getElementById('aspectRatio').checked && resizeImage) {
+                const ratio = resizeImage.width / resizeImage.height;
+                document.getElementById('widthInput').value = Math.round(this.value * ratio);
+            }
+        });
+
+        document.getElementById('pixelResize').addEventListener('change', function() {
+            document.getElementById('pixelOptions').style.display = 'block';
+            document.getElementById('percentOptions').style.display = 'none';
+        });
+
+        document.getElementById('percentResize').addEventListener('change', function() {
+            document.getElementById('pixelOptions').style.display = 'none';
+            document.getElementById('percentOptions').style.display = 'block';
+        });
+
+        document.querySelectorAll('input[name="percentValue"]').forEach(radio => {
+            radio.addEventListener('change', resizeImageFunc);
+        });
+
+        document.getElementById('cropWidth').addEventListener('input', updateCropPreview);
+        document.getElementById('cropHeight').addEventListener('input', updateCropPreview);
+        document.getElementById('cropX').addEventListener('input', updateCropPreview);
+        document.getElementById('cropY').addEventListener('input', updateCropPreview);
+
+        function handleDragOver(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy';
+        }
+
+        function handleDrop(evt, imageType) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            const files = evt.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.match('image.*')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            if (imageType === 'resize') {
+                                resizeImage = img;
+                                updateImagePreview(resizeImage, 'imagePreview');
+                                document.getElementById('widthInput').value = resizeImage.width;
+                                document.getElementById('heightInput').value = resizeImage.height;
+                            } else if (imageType === 'crop') {
+                                cropImage = img;
+                                updateImagePreview(cropImage, 'cropImagePreview');
+                                document.getElementById('cropWidth').value = cropImage.width;
+                                document.getElementById('cropHeight').value = cropImage.height;
+                                document.getElementById('cropX').value = 0;
+                                document.getElementById('cropY').value = 0;
+                                updateCropPreview();
+                            }
+                        }
+                        img.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        const resizeDropZone = document.getElementById('resizeDropzone');
+        resizeDropZone.addEventListener('dragover', handleDragOver, false);
+        resizeDropZone.addEventListener('drop', (e) => handleDrop(e, 'resize'), false);
+        resizeDropZone.addEventListener('click', function() {
+            document.getElementById('resizeImageInput').click();
+        });
+
+        const cropDropZone = document.getElementById('cropDropzone');
+        cropDropZone.addEventListener('dragover', handleDragOver, false);
+        cropDropZone.addEventListener('drop', (e) => handleDrop(e, 'crop'), false);
+        cropDropZone.addEventListener('click', function() {
+            document.getElementById('cropImageInput').click();
+        });
+    </script>
+</body>
+</html>

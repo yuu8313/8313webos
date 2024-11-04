@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PW作成</title>
+    <style></style>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Code</title>
+    <style>:root {
+    --primary: #1a1f3c;
+    --secondary: #2c3154;
+    --background: #0f1219;
+    --text: #e1e1e6;
+    --accent: #364765;
+    --danger: #ff4757;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    overflow-x: hidden;
+}
+
+#background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 2rem;
+    background: rgba(26, 31, 60, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1, h2 { 
+    text-align: center; 
+    margin-bottom: 1.5rem; 
+    color: var(--text);
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+
+.privacy-notice {
+    background: rgba(54, 71, 101, 0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    border-left: 4px solid var(--accent);
+}
+
+.options, .length-container { 
+    margin-bottom: 1.5rem;
+    background: rgba(44, 49, 84, 0.3);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+label {
+    display: inline-block;
+    margin-right: 1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+label:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+input[type="checkbox"] { 
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+input[type="range"] { 
+    width: 100%;
+    margin-top: 0.5rem;
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary);
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover { 
+    background-color: var(--secondary);
+    transform: translateY(-1px);
+}
+
+.password-display {
+    background-color: rgba(26, 31, 60, 0.8);
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.password-display.generating { 
+    animation: pulse 1.5s infinite;
+}
+
+.password-display::before {
+    content: '🔒';
+    position: absolute;
+    left: 10px;
+    opacity: 0.7;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.additional-options { 
+    display: flex; 
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.strength-meter {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-top: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.meter-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+}
+
+.strength-label {
+    display: block;
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.saved-passwords { 
+    margin-top: 2rem;
+    background: rgba(26, 31, 60, 0.5);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.saved-passwords ul { 
+    list-style-type: none; 
+    padding: 0;
+}
+
+.saved-passwords li {
+    background-color: rgba(44, 49, 84, 0.5);
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.saved-passwords li:hover {
+    background-color: rgba(54, 71, 101, 0.5);
+}
+
+.saved-password-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.password-name {
+    font-size: 0.9rem;
+    color: var(--accent);
+}
+
+.password-value {
+    font-family: monospace;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: var(--primary);
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal input {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    background: var(--background);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    border-radius: 4px;
+}
+
+@media (max-width: 480px) {
+    .container { 
+        padding: 1.5rem;
+        margin: 20px;
+    }
+    h1 { font-size: 1.8rem; }
+    .additional-options { 
+        flex-direction: column;
+    }
+    .additional-options button { 
+        width: 100%;
+    }
+}</style>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシー重視パスワードジェネレーター</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="background"></div>
+    <div class="container">
+        <h1>プライバシー重視パスワードジェネレーター</h1>
+        <div class="privacy-notice">
+            🔒 このツールはオフライン対応で、生成されたパスワードは端末内でのみ処理されます。
+            データは強力な暗号化で保存され、外部に送信されることはありません。
+            保存されたパスワードは自動的にマスクされます。
+        </div>
+        <div class="options">
+            <label><input type="checkbox" id="uppercase" checked> 大文字 (A-Z)</label>
+            <label><input type="checkbox" id="lowercase" checked> 小文字 (a-z)</label>
+            <label><input type="checkbox" id="numbers" checked> 数字 (0-9)</label>
+            <label><input type="checkbox" id="symbols"> 特殊文字 (!@#$%^&*)</label>
+        </div>
+        <div class="length-container">
+            <label for="length">パスワードの長さ: <span id="lengthValue">16</span></label>
+            <input type="range" id="length" min="8" max="64" value="16">
+        </div>
+        <button id="generatePassword">安全なパスワードを生成</button>
+        <div id="password" class="password-display"></div>
+        <div class="additional-options">
+            <button id="copyPassword">コピー</button>
+            <button id="savePassword">暗号化して保存</button>
+            <button id="downloadCSV">暗号化してエクスポート</button>
+        </div>
+        <div id="strengthMeter" class="strength-meter">
+            <div class="meter-bar"></div>
+            <span class="strength-label">パスワード強度: <span id="strengthValue">生成待ち</span></span>
+        </div>
+        <div id="savedPasswords" class="saved-passwords">
+            <h2>保存されたパスワード</h2>
+            <ul></ul>
+        </div>
+    </div>
+
+    <div id="saveModal" class="modal">
+        <div class="modal-content">
+            <h2>パスワードを保存</h2>
+            <input type="text" id="passwordName" placeholder="パスワードの名前を入力">
+            <div class="additional-options">
+                <button id="confirmSave">保存</button>
+                <button id="cancelSave">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="background.js"></script>
+    <script src="passwordGenerator.js"></script>
+</body>
+</html>
+    <script>// 3D背景のアニメーション
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('background').appendChild(renderer.domElement);
+
+const geometry = new THREE.OctahedronGeometry(1, 0);
+const material = new THREE.MeshBasicMaterial({ 
+    color: 0x1a1f3c,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.6
+});
+
+const shapes = [];
+
+for (let i = 0; i < 30; i++) {
+    const shape = new THREE.Mesh(geometry, material);
+    shape.position.set(
+        Math.random() * 20 - 10,
+        Math.random() * 20 - 10,
+        Math.random() * 20 - 10
+    );
+    shape.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI
+    );
+    shapes.push(shape);
+    scene.add(shape);
+}
+
+camera.position.z = 5;
+
+function animate() {
+    requestAnimationFrame(animate);
+    shapes.forEach(shape => {
+        shape.rotation.x += 0.002;
+        shape.rotation.y += 0.002;
+        shape.position.y += Math.sin(Date.now() * 0.001 + shape.position.x) * 0.005;
+    });
+    renderer.render(scene, camera);
+}
+animate();</script>
+</body>
+</html>
+    <script>document.addEventListener('DOMContentLoaded', () => {
+    const STORAGE_KEY = 'privacyos-PW';
+    const ENCRYPTION_KEY = window.crypto.getRandomValues(new Uint8Array(32));
+    
+    const passwordDisplay = document.getElementById('password');
+    const generateBtn = document.getElementById('generatePassword');
+    const lengthSlider = document.getElementById('length');
+    const lengthValue = document.getElementById('lengthValue');
+    const copyBtn = document.getElementById('copyPassword');
+    const saveBtn = document.getElementById('savePassword');
+    const downloadCSVBtn = document.getElementById('downloadCSV');
+    const strengthMeter = document.querySelector('.meter-bar');
+    const strengthValue = document.getElementById('strengthValue');
+    const savedPasswordsList = document.querySelector('#savedPasswords ul');
+    const saveModal = document.getElementById('saveModal');
+    const passwordNameInput = document.getElementById('passwordName');
+    const confirmSaveBtn = document.getElementById('confirmSave');
+    const cancelSaveBtn = document.getElementById('cancelSave');
+
+    const encryptData = async (text, name = '') => {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const key = await crypto.subtle.importKey(
+            'raw',
+            ENCRYPTION_KEY,
+            { name: 'AES-GCM' },
+            false,
+            ['encrypt']
+        );
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            data
+        );
+        return {
+            name,
+            data: btoa(String.fromCharCode(...new Uint8Array(encrypted))),
+            iv: btoa(String.fromCharCode(...iv))
+        };
+    };
+
+    const decryptData = async (encrypted) => {
+        try {
+            const key = await crypto.subtle.importKey(
+                'raw',
+                ENCRYPTION_KEY,
+                { name: 'AES-GCM' },
+                false,
+                ['decrypt']
+            );
+            const iv = Uint8Array.from(atob(encrypted.iv), c => c.charCodeAt(0));
+            const data = Uint8Array.from(atob(encrypted.data), c => c.charCodeAt(0));
+            const decrypted = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv },
+                key,
+                data
+            );
+            return new TextDecoder().decode(decrypted);
+        } catch (error) {
+            console.error('復号化エラー:', error);
+            return null;
+        }
+    };
+
+    function generatePassword() {
+        const length = parseInt(lengthSlider.value);
+        const useUppercase = document.getElementById('uppercase').checked;
+        const useLowercase = document.getElementById('lowercase').checked;
+        const useNumbers = document.getElementById('numbers').checked;
+        const useSymbols = document.getElementById('symbols').checked;
+
+        const chars = [
+            ...(useUppercase ? 'ABCDEFGHJKLMNPQRSTUVWXYZ' : ''),
+            ...(useLowercase ? 'abcdefghijkmnpqrstuvwxyz' : ''),
+            ...(useNumbers ? '23456789' : ''),
+            ...(useSymbols ? '!@#$%^&*()_+-=[]{}|;:,.<>?' : '')
+        ].join('');
+
+        if (chars.length === 0) {
+            alert('少なくとも1つのオプションを選択してください。');
+            return;
+        }
+
+        passwordDisplay.textContent = '安全に生成中...';
+        passwordDisplay.classList.add('generating');
+
+        const getRandomChar = () => {
+            const array = new Uint32Array(1);
+            crypto.getRandomValues(array);
+            return chars[array[0] % chars.length];
+        };
+
+        setTimeout(() => {
+            const password = Array.from({length}, getRandomChar).join('');
+            passwordDisplay.textContent = password;
+            passwordDisplay.classList.remove('generating');
+            updateStrengthMeter(password);
+        }, 800);
+    }
+
+    function updateStrengthMeter(password) {
+        const strength = calculatePasswordStrength(password);
+        strengthMeter.style.width = `${strength}%`;
+        
+        if (strength < 50) {
+            strengthMeter.style.backgroundColor = '#ff4757';
+            strengthValue.textContent = '要改善';
+        } else if (strength < 80) {
+            strengthMeter.style.backgroundColor = '#ffa502';
+            strengthValue.textContent = '適度';
+        } else {
+            strengthMeter.style.backgroundColor = '#2ed573';
+            strengthValue.textContent = '強力';
+        }
+    }
+
+    function calculatePasswordStrength(password) {
+        let strength = 0;
+        const hasLower = /[a-z]/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSymbol = /[^A-Za-z0-9]/.test(password);
+        
+        if (hasLower) strength += 25;
+        if (hasUpper) strength += 25;
+        if (hasNumber) strength += 25;
+        if (hasSymbol) strength += 25;
+        
+        const length = password.length;
+        strength += Math.min(25, (length - 8) * 2);
+        
+        const uniqueChars = new Set(password).size;
+        strength += Math.min(20, (uniqueChars / length) * 20);
+        
+        return Math.min(100, strength);
+    }
+
+    async function copyPassword() {
+        const password = passwordDisplay.textContent;
+        try {
+            await navigator.clipboard.writeText(password);
+            passwordDisplay.textContent = 'コピーしました！';
+            setTimeout(() => {
+                passwordDisplay.textContent = password;
+            }, 1000);
+        } catch (err) {
+            alert('クリップボードへのコピーに失敗しました。');
+        }
+    }
+
+    async function savePassword() {
+        const password = passwordDisplay.textContent;
+        if (password && password !== '安全に生成中...' && password !== 'コピーしました！') {
+            saveModal.style.display = 'flex';
+            passwordNameInput.value = '';
+            passwordNameInput.focus();
+        }
+    }
+
+    async function confirmSavePassword() {
+        const password = passwordDisplay.textContent;
+        const name = passwordNameInput.value.trim() || '無名のパスワード';
+        const savedPasswords = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const encrypted = await encryptData(password, name);
+        savedPasswords.push(encrypted);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedPasswords));
+        saveModal.style.display = 'none';
+        updateSavedPasswordsList();
+    }
+
+    function updateSavedPasswordsList() {
+        const savedPasswords = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        savedPasswordsList.innerHTML = '';
+        savedPasswords.forEach((encrypted, index) => {
+            const li = document.createElement('li');
+            const maskedPassword = '•'.repeat(12);
+            li.innerHTML = `
+                <div class="saved-password-content">
+                    <div class="password-name">${encrypted.name}</div>
+                    <div class="password-value">${maskedPassword}</div>
+                </div>
+                <div class="password-actions">
+                    <button class="copy-password" data-index="${index}">コピー</button>
+                    <button class="delete-password" data-index="${index}">削除</button>
+                </div>
+            `;
+            savedPasswordsList.appendChild(li);
+        });
+    }
+
+    async function copyStoredPassword(index) {
+        const savedPasswords = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const encrypted = savedPasswords[index];
+        const decrypted = await decryptData(encrypted);
+        if (decrypted) {
+            await navigator.clipboard.writeText(decrypted);
+            alert('パスワードをコピーしました');
+        }
+    }
+
+    function deleteSavedPassword(index) {
+        const savedPasswords = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        savedPasswords.splice(index, 1);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedPasswords));
+        updateSavedPasswordsList();
+    }
+
+    async function downloadCSV() {
+        const savedPasswords = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const decryptedPasswords = await Promise.all(
+            savedPasswords.map(async (encrypted) => {
+                const decrypted = await decryptData(encrypted);
+                return {
+                    name: encrypted.name,
+                    password: decrypted
+                };
+            })
+        );
+
+        const csvContent = "data:text/csv;charset=utf-8," 
+            + decryptedPasswords.map(({name, password}) => 
+                `"${name}","${password}"`).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        const date = new Date().toISOString().slice(0, 10);
+        link.setAttribute("download", `secure_passwords_${date}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    generateBtn.addEventListener('click', generatePassword);
+    copyBtn.addEventListener('click', copyPassword);
+    saveBtn.addEventListener('click', savePassword);
+    downloadCSVBtn.addEventListener('click', downloadCSV);
+    confirmSaveBtn.addEventListener('click', confirmSavePassword);
+    cancelSaveBtn.addEventListener('click', () => {
+        saveModal.style.display = 'none';
+    });
+
+    lengthSlider.addEventListener('input', () => {
+        lengthValue.textContent = lengthSlider.value;
+    });
+
+    savedPasswordsList.addEventListener('click', async (e) => {
+        const index = parseInt(e.target.dataset.index);
+        if (e.target.classList.contains('copy-password')) {
+            await copyStoredPassword(index);
+        } else if (e.target.classList.contains('delete-password')) {
+            deleteSavedPassword(index);
+        }
+    });
+
+    updateSavedPasswordsList();
+});</script>
+</body>
+</html>
