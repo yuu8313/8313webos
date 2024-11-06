@@ -1,4 +1,6 @@
-// taskbar.js - タスクバーの管理を担当
+/**
+ * taskbar.js - タスクバーの管理を担当
+ */
 
 class TaskbarManager {
     constructor() {
@@ -76,16 +78,24 @@ class TaskbarManager {
     }
 
     // タスクバーにアプリを追加
-        addTaskbarItem(windowId, app) {
+    addTaskbarItem(windowId, app) {
         const taskbarItem = document.createElement('div');
         taskbarItem.className = 'taskbar-item active';
         taskbarItem.dataset.windowId = windowId;
         
         taskbarItem.innerHTML = `
             <span class="icon">${app.icon}</span>
+            <button class="close-button">×</button>
         `;
 
-        taskbarItem.addEventListener('click', () => {
+        // アプリアイテムのクリック処理
+        taskbarItem.addEventListener('click', (e) => {
+            // クローズボタンがクリックされた場合
+            if (e.target.classList.contains('close-button')) {
+                e.stopPropagation(); // 親要素のクリックイベントを停止
+                applicationManager.closeApplication(windowId);
+                return;
+            }
             this.handleTaskbarItemClick(windowId);
         });
 
