@@ -1,6 +1,4 @@
 // application.js - アプリケーションの管理を担当
- 
-
 class ApplicationManager {
     constructor() {
         this.apps = [
@@ -10,6 +8,8 @@ class ApplicationManager {
             { id: 'txtEditor', name: '8313テキストエディター', path: 'src/apps/app37/index.html', icon: 'src/image/icon37.png', iconType: 'image' },
             { id: 'bookmark', name: '8313ブックマーク保存', path: 'src/apps/app28/index.html', icon: 'src/image/icon28.png', iconType: 'image' },
             { id: 'privacyOS', name: '8313privacyOS', path: 'src/apps/app29/index.html', icon: 'src/image/icon29.png', iconType: 'image' },
+            { id: 'gazoutorimingu', name: '8313画像トリミングアプリ', path: 'src/apps/app29/index.html', icon: 'src/image/icon29.png', iconType: 'image' },
+
         ];
 
         /*
