@@ -3,314 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>オーディオプレーヤー</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #111;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .player-container {
-            background-color: #222;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-        }
-        .player-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .player-title {
-            font-size: 24px;
-            color: #ff3333;
-            margin: 0;
-        }
-        .controls {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .control-btn {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 18px;
-            margin: 0 10px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        .control-btn:hover {
-            background-color: #ff3333;
-        }
-        .control-btn:active {
-            transform: scale(0.95);
-        }
-        .playback-bar {
-            width: 100%;
-            height: 5px;
-            background-color: #444;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            position: relative;
-        }
-        .playback-progress {
-            height: 100%;
-            background-color: #ff3333;
-            border-radius: 5px;
-            width: 0;
-            transition: width 0.1s linear;
-        }
-        .time-display {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            color: #888;
-        }
-        .adjustments {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        .adjustment {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .adjustment label {
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #888;
-        }
-        .adjustment input {
-            width: 100px;
-        }
-        .playlist {
-            margin-top: 30px;
-            background-color: #333;
-            border-radius: 10px;
-            padding: 10px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .playlist-item {
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .playlist-item:hover {
-            background-color: #444;
-        }
-        .playlist-item.active {
-            background-color: #ff3333;
-            color: #fff;
-        }
-        #fileInput {
-            display: none;
-        }
-        .upload-btn {
-            background-color: #ff3333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-        }
-        .upload-btn:hover {
-            background-color: #ff6666;
-        }
-    </style>
+    <title>8313新オーディオプレイヤー</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="player-container">
-        <div class="player-header">
-            <h1 class="player-title">オーディオプレーヤー</h1>
-        </div>
-        <div class="controls">
-            <button class="control-btn" id="prevBtn">⏮</button>
-            <button class="control-btn" id="playPauseBtn">▶</button>
-            <button class="control-btn" id="stopBtn">⏹</button>
-            <button class="control-btn" id="nextBtn">⏭</button>
-            <button class="control-btn" id="shuffleBtn">🔀</button>
-            <button class="control-btn" id="repeatBtn">🔁</button>
-        </div>
-        <div class="playback-bar">
-            <div class="playback-progress" id="playbackProgress"></div>
-        </div>
-        <div class="time-display">
-            <span id="currentTime">00:00</span>
-            <span id="totalTime">00:00</span>
-        </div>
-        <div class="adjustments">
-            <div class="adjustment">
-                <label for="pitchControl">ピッチ</label>
-                <input type="range" id="pitchControl" min="0.5" max="2" step="0.1" value="1">
+    <div class="notification" id="notification"></div>
+    
+    <div class="container">
+        <div class="player-wrapper">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                    <span class="upload-icon">🎵</span>
+                    <p>ドラッグ＆ドロップで音声ファイルをアップロード</p>
+                    <p>または</p>
+                    <label class="upload-button" for="fileInput">
+                        ファイルを選択
+                        <input type="file" id="fileInput" accept="audio/*" multiple hidden>
+                    </label>
+                </div>
             </div>
-            <div class="adjustment">
-                <label for="speedControl">スピード</label>
-                <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1">
+
+            <div class="player-container">
+                <div class="now-playing">
+                    <div class="track-info">
+                        <h2 id="trackTitle">曲を選択してください</h2>
+                        <p id="trackArtist">アーティスト名</p>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="progress-container">
+                        <span id="currentTime">0:00</span>
+                        <div class="progress-bar">
+                            <div class="progress" id="progress"></div>
+                        </div>
+                        <span id="duration">0:00</span>
+                    </div>
+
+                    <div class="main-controls">
+                        <button id="shuffleBtn" class="control-btn">🔀</button>
+                        <button id="prevBtn" class="control-btn">⏮️</button>
+                        <button id="playBtn" class="control-btn play-btn">▶️</button>
+                        <button id="nextBtn" class="control-btn">⏭️</button>
+                        <button id="loopBtn" class="control-btn">🔁</button>
+                    </div>
+
+                    <div class="extra-controls">
+                        <div class="volume-control">
+                            <span>🔊</span>
+                            <input type="range" id="volumeSlider" min="0" max="100" value="100">
+                        </div>
+                        <div class="speed-control">
+                            <select id="speedSelect">
+                                <option value="0.5">0.5x</option>
+                                <option value="1" selected>1x</option>
+                                <option value="1.5">1.5x</option>
+                                <option value="2">2x</option>
+                            </select>
+                        </div>
+                        <div class="pitch-control">
+                            <span>🎼</span>
+                            <input type="range" id="pitchSlider" min="-12" max="12" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="playlist-container">
+                <h3>プレイリスト</h3>
+                <ul id="playlist" class="playlist"></ul>
             </div>
         </div>
-        <div class="playlist" id="playlist"></div>
-        <input type="file" id="fileInput" accept=".mp3,.wav,.ogg,.aac,.alac" multiple>
-        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">音声ファイルをアップロード</button>
     </div>
 
-    <script>
-        const audio = new Audio();
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const shuffleBtn = document.getElementById('shuffleBtn');
-        const repeatBtn = document.getElementById('repeatBtn');
-        const playbackProgress = document.getElementById('playbackProgress');
-        const currentTimeDisplay = document.getElementById('currentTime');
-        const totalTimeDisplay = document.getElementById('totalTime');
-        const pitchControl = document.getElementById('pitchControl');
-        const speedControl = document.getElementById('speedControl');
-        const playlist = document.getElementById('playlist');
-        const fileInput = document.getElementById('fileInput');
-
-        let currentTrack = 0;
-        let isPlaying = false;
-        let isShuffled = false;
-        let isRepeating = false;
-        let tracks = [];
-
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = Math.floor(seconds % 60);
-            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-        }
-
-        function updatePlaybackBar() {
-            const progress = (audio.currentTime / audio.duration) * 100;
-            playbackProgress.style.width = `${progress}%`;
-            currentTimeDisplay.textContent = formatTime(audio.currentTime);
-        }
-
-        function loadTrack(index) {
-            if (index >= 0 && index < tracks.length) {
-                currentTrack = index;
-                audio.src = URL.createObjectURL(tracks[currentTrack]);
-                audio.load();
-                updatePlaylist();
-                if (isPlaying) {
-                    audio.play();
-                }
-            }
-        }
-
-        function togglePlayPause() {
-            if (tracks.length === 0) return;
-            if (isPlaying) {
-                audio.pause();
-                playPauseBtn.textContent = '▶';
-            } else {
-                audio.play();
-                playPauseBtn.textContent = '⏸';
-            }
-            isPlaying = !isPlaying;
-        }
-
-        function stop() {
-            audio.pause();
-            audio.currentTime = 0;
-            isPlaying = false;
-            playPauseBtn.textContent = '▶';
-        }
-
-        function playNext() {
-            if (isShuffled) {
-                currentTrack = Math.floor(Math.random() * tracks.length);
-            } else {
-                currentTrack = (currentTrack + 1) % tracks.length;
-            }
-            loadTrack(currentTrack);
-        }
-
-        function playPrevious() {
-            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
-            loadTrack(currentTrack);
-        }
-
-        function toggleShuffle() {
-            isShuffled = !isShuffled;
-            shuffleBtn.style.color = isShuffled ? '#ff3333' : '#fff';
-        }
-
-        function toggleRepeat() {
-            isRepeating = !isRepeating;
-            repeatBtn.style.color = isRepeating ? '#ff3333' : '#fff';
-        }
-
-        function updatePlaylist() {
-            playlist.innerHTML = '';
-            tracks.forEach((track, index) => {
-                const item = document.createElement('div');
-                item.classList.add('playlist-item');
-                if (index === currentTrack) {
-                    item.classList.add('active');
-                }
-                item.textContent = track.name;
-                item.onclick = () => loadTrack(index);
-                playlist.appendChild(item);
-            });
-        }
-
-        playPauseBtn.onclick = togglePlayPause;
-        stopBtn.onclick = stop;
-        prevBtn.onclick = playPrevious;
-        nextBtn.onclick = playNext;
-        shuffleBtn.onclick = toggleShuffle;
-        repeatBtn.onclick = toggleRepeat;
-
-        audio.onended = () => {
-            if (isRepeating) {
-                audio.currentTime = 0;
-                audio.play();
-            } else {
-                playNext();
-            }
-        };
-
-        audio.ontimeupdate = updatePlaybackBar;
-        audio.onloadedmetadata = () => {
-            totalTimeDisplay.textContent = formatTime(audio.duration);
-        };
-
-        pitchControl.oninput = (e) => {
-            audio.preservesPitch = false;
-            audio.playbackRate = e.target.value;
-        };
-
-        speedControl.oninput = (e) => {
-            audio.preservesPitch = true;
-            audio.playbackRate = e.target.value;
-        };
-
-        fileInput.onchange = (e) => {
-            const files = Array.from(e.target.files);
-            tracks = tracks.concat(files);
-            updatePlaylist();
-            if (tracks.length === files.length) {
-                loadTrack(0);
-            }
-        };
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
