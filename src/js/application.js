@@ -10,6 +10,8 @@ class ApplicationManager {
             { id: 'privacyOS', name: '8313privacyOS', path: 'src/apps/app29/index.html', icon: 'src/image/icon29.png', iconType: 'image' },
             { id: 'gazouresize', name: '8313画像リサイズアプリ', path: 'src/apps/app33/index.html', icon: 'src/image/icon23.png', iconType: 'image' },
             { id: 'gazoutorimingu', name: '8313画像トリミングアプリ', path: 'src/apps/app34/index.html', icon: 'src/image/icon23.png', iconType: 'image' },
+            { id: 'gazouresize', name: '8313新オーディオプレイヤー', path: 'src/apps/app20/index.html', icon: 'src/image/icon20.png', iconType: 'image' },
+            { id: 'gazoutorimingu', name: '8313新ビデオプレイヤー', path: 'src/apps/app30/index.html', icon: 'src/image/icon30.png', iconType: 'image' },
 
         ];
 
