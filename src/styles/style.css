@@ -27,7 +27,14 @@ body {
 #desktop {
     height: calc(100vh - var(--taskbar-height));
     position: relative;
-    overflow: hidden;
+    overflow: auto;
+    scrollbar-width: none; /* Firefox用 */
+    -ms-overflow-style: none; /* IE/Edge用 */
+}
+
+/* Webkit (Chrome, Safari)用のスクロールバー非表示 */
+#desktop::-webkit-scrollbar {
+    display: none;
 }
 
 /* デスクトップアイコン */
@@ -36,6 +43,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, 80px);
     gap: 20px;
+    min-height: 100%;
 }
 
 .desktop-icon {
@@ -132,6 +140,7 @@ body {
     position: fixed;
     bottom: 0;
     width: 100%;
+    z-index: 1000;
 }
 
 #start-button {
@@ -200,6 +209,7 @@ body {
     overflow-y: auto;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     animation: menuOpen 0.2s ease-out;
+    z-index: 1001;
 }
 
 .apps-list {
