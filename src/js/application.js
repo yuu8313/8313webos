@@ -17,6 +17,7 @@ class ApplicationManager {
 
             { id: 'QR Code Scanner', name: '8313QRコード読み取り', path: 'src/apps/app10-2/index.html', icon: 'src/image/icon10.png', iconType: 'image' },
             { id: 'imageangou', name: '8313暗号画像ステガノグラフィー', path: 'src/apps/app6-2/index.html', icon: '🖼️', iconType: 'emoji' },
+            { id: '2048', name: '2048ゲーム', path: 'src/apps/app22/index.html', icon: '2048', iconType: 'emoji' },
 
 
 
