@@ -10,8 +10,18 @@ class ApplicationManager {
             { id: 'privacyOS', name: '8313privacyOS', path: 'src/apps/app29/index.html', icon: 'src/image/icon29.png', iconType: 'image' },
             { id: 'gazouresize', name: '8313画像リサイズアプリ', path: 'src/apps/app33/index.html', icon: 'src/image/icon23.png', iconType: 'image' },
             { id: 'gazoutorimingu', name: '8313画像トリミングアプリ', path: 'src/apps/app34/index.html', icon: 'src/image/icon23.png', iconType: 'image' },
-            { id: 'gazouresize', name: '8313新オーディオプレイヤー', path: 'src/apps/app20/index.html', icon: 'src/image/icon20.png', iconType: 'image' },
-            { id: 'gazoutorimingu', name: '8313新ビデオプレイヤー', path: 'src/apps/app30/index.html', icon: 'src/image/icon30.png', iconType: 'image' },
+            { id: 'dougaplayer', name: '8313新ビデオプレイヤー', path: 'src/apps/app30/index.html', icon: 'src/image/icon30.png', iconType: 'image' },
+            { id: 'audioplayer', name: '8313新音楽プレイヤー', path: 'src/apps/app20/index.html', icon: 'src/image/icon20.png', iconType: 'image' },
+            { id: 'QR Code Generator', name: '8313QRコード生成', path: 'src/apps/app10/index.html', icon: 'src/image/icon10.png', iconType: 'image' },
+            { id: 'CODE128 Code Generator', name: '8313Chord128コード生成', path: 'src/apps/app10-10-3/index.html', icon: 'src/image/icon10-3.png', iconType: 'image' },
+
+            { id: 'QR Code Scanner', name: '8313QRコード読み取り', path: 'src/apps/app10-2/index.html', icon: 'src/image/icon10.png', iconType: 'image' },
+            { id: 'imageangou', name: '8313暗号画像ステガノグラフィー', path: 'src/apps/app6-2/index.html', icon: '🖼️', iconType: 'emoji' },
+
+
+
+
+
 
         ];
 
@@ -29,6 +39,10 @@ class ApplicationManager {
     iconType: 'image'  // 画像アイコンを使用する場合は'image'を指定 そうでなければemoji
 
 }
+
+
+{ id: 'fishing', name: '8313フィッシング詐欺体験', path: 'src/apps/fishing/index.html', icon: '⚠️', iconType: 'emoji' },
+
 
 */
         
