@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バーコード作成機</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>バーコード作成機</h1>
+            <p class="subtitle">Code128形式のバーコードを簡単に生成</p>
+        </header>
+
+        <main class="glass-panel">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="barcodeText">テキスト入力 📝</label>
+                    <input type="text" id="barcodeText" placeholder="バーコードにしたいテキストを入力">
+                </div>
+
+                <div class="options-group">
+                    <div class="input-group">
+                        <label for="barcodeHeight">高さ 📏</label>
+                        <input type="range" id="barcodeHeight" min="50" max="150" value="100">
+                    </div>
+                    <div class="input-group">
+                        <label for="barcodeColor">色 🎨</label>
+                        <input type="color" id="barcodeColor" value="#000000">
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h2>プレビュー 👀</h2>
+                <div class="barcode-container">
+                    <svg id="barcode"></svg>
+                </div>
+                <button id="downloadBtn" class="primary-button">ダウンロード 💾</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="script.js"></script>
+</body>
+</html>

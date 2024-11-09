@@ -3,255 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QRコード作成</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #8A2BE2;
-            --secondary-color: #4B0082;
-            --accent-color: #9370DB;
-            --background-color: #F8F0FF;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.2);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        h1 {
-            color: var(--secondary-color);
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-            font-size: 1.5rem;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--accent-color);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
-        }
-
-        button {
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1rem;
-            margin: 0.5rem 0;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        #qrcode {
-            margin-top: 1.5rem;
-            position: relative;
-        }
-
-        #qrcode img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        #qrcode img:hover {
-            transform: scale(1.05);
-        }
-
-        #download-btn {
-            background-color: var(--accent-color);
-            margin-top: 1rem;
-        }
-
-        #download-btn:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .loading {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .loading.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--accent-color);
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-    .logo {
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    
-    .logo img {
-        display: block;
-        margin: 0 auto;
-    }
-
-.logo {
-    text-align: center;
-    margin-bottom: 0; /* 下のマージンを削除 */
-    padding: 0; /* パディングも削除 */
-}
-.logo img {
-    display: block; /* 画像をブロック要素に */
-    margin: 0 auto; /* 中央揃え */
-    vertical-align: middle; /* 余白を取り除く */
-}
-}
-        
-    </style>
+    <title>8313QRコード生成器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-　　　　　<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABcCAMAAADUMSJqAAAAWlBMVEX///8AAAA+Pj5oaGgpKSn6+vqamprn5+fX19fOzs5JSUmwsLDv7+8cHByRkZEKCgpgYGB4eHhQUFA3Nze2trZ/f38wMDBERETHx8ff39+qqqoUFBSIiIhwcHAlTIooAAAFZUlEQVRoge2ZXaOiIBCGIQNR8SNDRa3//zd3GCAxQ2vP2avtvTgJwnMIZoaBCPnqq6++Is319KRr516x0zUhRPW9chWi7ydCum2PJgK/0o0SD6d0IKSgtHAVGaWckGTb4xqBnyg9r4RwKVNm4DmMfJ6VqQApD3/ucYrCz5IFGhHOKc0c3FQSMrgxWvgY9pDnPTgLy+kKPvjqNTwNe7ADOBNOHq6aRhCWJLC2UggJq5g0a7jvwQ7hwq8Mc/BAE6UTDrAO4cz3ED+Cg7Wo34Vn3GpCeGIeK0r7qtK/AOeufEK4V4s9fgyvFvi0wPPfgY9an2itdAbmozUYitKgqW2L31nQltbStblQio/Zr1lL64gWjm4DzarP4cS78uKhJTXwlJZlCYELXshybolpYZ1o6XEIXxRaiyQSPzEqypW1BNqHj2mgzMPrehZQqmuEp6mYaStTifAs7DHuwTeycIgzaIoK4RD2gzl/Vgz+erPAqEjQsu1mkRv4x5tFl2zETVRMJg1jvmrFk0YjXOkpaSDM8G2PLgKPKnejuiyl/FNGVO0W3n7KmHigihFZuece4rjiCFecnw28xzYjzAyHqRsrnuE7GYX3q5VBD/Wq0c4Bfl+1UWalYXk1Lm+zOPJWpzicevjlGV7TEuHWMN+C8wzMgmUP6bZNRMbznLsKiL6dyKSDyyxL34fr53evkyLi4FYH8NrNMMCXYIR/AicCMTfL8GoGuG2IkYaxCFzKEdk3xponD3VJkZTY18Yw66FCpkEp7v6+V4UL/wwfnputN4sP4JchNxo6D8+HO4w8TU00T0VN53zgUjYOXuYnk/MOef0OPJANXCibFF2dh9pcAOGPvDkecg/hNinCXDF/Cd/ZLAB+MboVE1itKkAa4ZV5Voi7KNWZNjAAfe/6BS5M86ncgT/GqtGvsdcmKQps+b7Ab0uzXVUILx18kxQFu6aNJqtmfQR6u3RoxgKnpYRMyEyLKBQs4WSmZZxU6+Dj/Q4VuihgilTBYZ4KlbtmL3WlZeBfAPeP66QI4Q/3p6aZ9na+5/7nGPzRq3OPYhVbsjfh4/U0OThFJ/JweTVuBbXoX+Zwlp+0gdM2v3r4MCR7cOHtvHTu7+FhdF/Fc7py//hR0cJvEKAk+0v4Qa5oLbs2K+UCqIdfCFuLOHhjMkjy1lHRu816QVO/+6/l4FbwdXenBVQMLQjgIoPtPc2yJG8R3gi3yeHGhhIeDs0kYU1+P4BbBR6KgSucc2aML5B1fxHhono6B/AgtiBcBjCyhVcHcEiKAjimQ2qJigXnNu+seDUpYDU+fwITUQXUpnF0TEFUVPggl20u+I58j3EIz31UlMuuiWJvwV+n0AE8Veao2CSJ0hxxkFPjvxq0vh2k0NHk38OJT+eej4pBPN+5KXoBr1bw+2KKNvV8hn924IKTlU3+a9phaVjgMk3tnNe0wkTjKLYsCg+5qEfyz5bNgryZFL0+5MJTO5cObuoRjnuPawkDL2uA3+eynGPnmeithXC2HJWd8zHC3YH7o+K/gnOtm8ZO/KlpYIoaI2tcbQPrmGcazGgydyXZp3AsWZ9X7pBLlmCw/laxvGUHXrPlYmFYwYMrEfvV/mLkt8qeG/GzQoHl3XkF7l9x67cdr+K54v4Fmk3+L0tUpMvRSWNp/NHtHHGp5wZut47jm6LNdaudcy3AYMBRUnOr+oC3LhSCJXXjG9etgTY3RX73D3c8LwwG+/DXV9zGKEzJ5y2v8qPq8Ir71eU8wJVMz2Ur5TS7F6m5n4d9qZDSZ1zlweX8zk3R42cFv9jEn5Cee8Q2i9c/iEx9Lx4/iLh6hKu+B2sZ3vxB5Kuvvvqv9Af+10yJCF9dXQAAAABJRU5ErkJggg==" alt="VisiOS">
-　　</div>
-        <h1>QR Code Generator</h1>
-        <div class="input-group">
-            <input type="text" id="text-input" placeholder="テキスト/URLを入力してください">
-        </div>
-        <button onclick="generateQR()">QRコードを生成</button>
-        <div id="qrcode"></div>
-        <button id="download-btn" style="display: none;" onclick="downloadQR()">QRコードをダウンロード</button>
-        <div class="loading">
-            <div class="spinner"></div>
-        </div>
+    <div class="notification" id="notification">
+        <span class="notification-text"></span>
     </div>
 
-    <script>
-        function generateQR() {
-            var text = document.getElementById("text-input").value;
-            if (text) {
-                showLoading();
-                setTimeout(() => {
-                    var qr = qrcode(0, 'M');
-                    qr.addData(text);
-                    qr.make();
-                    var qrCodeDiv = document.getElementById('qrcode');
-                    qrCodeDiv.innerHTML = qr.createImgTag(5);
-                    qrCodeDiv.classList.add('fade-in');
-                    document.getElementById('download-btn').style.display = 'inline-block';
-                    hideLoading();
-                }, 1000);
-            } else {
-                alert("テキストを入力してください。");
-            }
-        }
+    <div class="container">
+        <section class="generator-section" id="generatorSection">
+            <h1>8313QRコード生成器</h1>
+            <div class="glass-card">
+                <div class="input-group">
+                    <label for="text">テキストまたはURL 🔤</label>
+                    <input type="text" id="text" placeholder="https://example.com">
+                </div>
 
-        function downloadQR() {
-            var img = document.querySelector("#qrcode img");
-            if (img) {
-                var link = document.createElement('a');
-                link.download = 'visi-qrcode.png';
-                link.href = img.src;
-                link.click();
-            }
-        }
+                <div class="options-grid">
+                    <div class="input-group">
+                        <label for="size">サイズ 📏</label>
+                        <input type="range" id="size" min="100" max="400" value="200">
+                        <span class="size-value">200 x 200</span>
+                    </div>
 
-        function showLoading() {
-            document.querySelector('.loading').classList.add('active');
-        }
+                    <div class="input-group">
+                        <label for="errorLevel">エラー訂正レベル 🛡️</label>
+                        <select id="errorLevel">
+                            <option value="L">低 (7%)</option>
+                            <option value="M" selected>中 (15%)</option>
+                            <option value="Q">高 (25%)</option>
+                            <option value="H">最高 (30%)</option>
+                        </select>
+                    </div>
 
-        function hideLoading() {
-            document.querySelector('.loading').classList.remove('active');
-        }
-    </script>
+                    <div class="input-group">
+                        <label for="foreground">QRコードの色 🎨</label>
+                        <input type="color" id="foreground" value="#000000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="background">背景色 🖼️</label>
+                        <input type="color" id="background" value="#ffffff">
+                    </div>
+                </div>
+
+                <button id="generate" class="generate-btn">QRコードを生成 ⚡</button>
+            </div>
+        </section>
+
+        <section class="result-section" id="resultSection">
+            <div class="glass-card result-card">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <span>生成中...</span>
+                </div>
+                <div id="qrcode"></div>
+                <button id="download" class="download-btn">ダウンロード 💾</button>
+                <button id="regenerate" class="regenerate-btn">新しいQRコードを作成 </button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
