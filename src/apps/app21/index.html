@@ -3,506 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>未来型PDF編集アプリケーション</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #121212;
-            --text-color: #ffffff;
-            --primary-color: #ff4136;
-            --secondary-color: #1e1e1e;
-            --accent-color: #2c2c2c;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            background-color: var(--secondary-color);
-            width: 250px;
-            height: 100%;
-            position: fixed;
-            top: 0;
-            transition: 0.3s;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .sidebar-left {
-            left: -250px;
-        }
-
-        .sidebar-right {
-            right: -250px;
-        }
-
-        .sidebar.open {
-            transform: translateX(250px);
-        }
-
-        .sidebar-toggle {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            position: fixed;
-            top: 10px;
-            z-index: 1001;
-        }
-
-        .sidebar-left-toggle {
-            left: 10px;
-        }
-
-        .sidebar-right-toggle {
-            right: 10px;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            margin-left: 60px;
-            margin-right: 60px;
-            padding: 20px;
-            transition: 0.3s;
-            overflow-y: auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 2.5em;
-            margin-bottom: 30px;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin: 0 5px;
-            border-radius: 5px;
-        }
-
-        .tab:hover {
-            background-color: var(--accent-color);
-        }
-
-        .tab.active {
-            background-color: var(--primary-color);
-        }
-
-        .tab-content {
-            display: none;
-            background-color: var(--secondary-color);
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        #pdf-viewer {
-            width: 100%;
-            height: 800px;
-            border: 1px solid var(--accent-color);
-            background-color: var(--bg-color);
-            overflow-y: auto;
-        }
-
-        .button {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            border-radius: 5px;
-        }
-
-        .button:hover {
-            background-color: #ff6659;
-        }
-
-        #search-container {
-            margin-bottom: 20px;
-        }
-
-        #search-input {
-            background-color: var(--accent-color);
-            color: var(--text-color);
-            border: none;
-            padding: 10px;
-            width: 70%;
-            border-radius: 5px;
-        }
-
-        #search-results {
-            margin-top: 10px;
-        }
-
-        .search-result {
-            cursor: pointer;
-            padding: 5px;
-            border-bottom: 1px solid var(--accent-color);
-        }
-
-        .search-result:hover {
-            background-color: var(--accent-color);
-        }
-
-        #thumbnail-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            overflow-y: auto;
-            max-height: 100%;
-        }
-
-        .thumbnail {
-            margin-bottom: 10px;
-            cursor: pointer;
-            width: 100px;
-            text-align: center;
-        }
-
-        .thumbnail img {
-            width: 100%;
-            border: 1px solid var(--accent-color);
-            transition: border-color 0.3s;
-        }
-
-        .thumbnail img:hover {
-            border-color: var(--primary-color);
-        }
-
-        .thumbnail-label {
-            margin-top: 5px;
-            font-size: 12px;
-            color: var(--text-color);
-        }
-
-        /* Futuristic scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--secondary-color);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ff6659;
-        }
-    </style>
+    <title>PDF プレビューア 📄</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    <button class="sidebar-toggle sidebar-left-toggle" onclick="toggleSidebar('left')">
-        <i class="fas fa-bars"></i>
-    </button>
-    <div class="sidebar sidebar-left" id="leftSidebar">
-        <div id="pdf-controls">
-            <button class="button" onclick="prevPage()">前のページ</button>
-            <button class="button" onclick="nextPage()">次のページ</button>
-            <input type="number" id="current-page" min="1" value="1" onchange="goToPage(this.value)">
-            <span>/ <span id="page-count"></span></span>
-            <button class="button" onclick="zoomIn()">拡大</button>
-            <button class="button" onclick="zoomOut()">縮小</button>
-            <button class="button" onclick="rotateClockwise()">回転 (時計回り)</button>
-            <button class="button" onclick="rotateCounterClockwise()">回転 (反時計回り)</button>
-            <button class="button" onclick="toggleOutline()">目次</button>
-            <button class="button" onclick="downloadPDF()">ダウンロード</button>
-            <button class="button" onclick="toggleFullScreen()">全画面表示</button>
-        </div>
+    <div class="notification" id="notification">
+        <span class="notification-message"></span>
+        <button class="notification-close">×</button>
     </div>
 
-    <div class="main-content">
-        <h1>PDFプレビュー</h1>
-        <div class="tabs">
-            <button class="tab active" onclick="openTab(event, 'viewer')">ビューア</button>
-            <button class="tab" onclick="openTab(event, 'properties')">プロパティ</button>
-        </div>
+    <div class="container">
+        <button id="toggleSidebar" class="toggle-sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
 
-        <div id="viewer" class="tab-content active">
-            <input type="file" id="pdf-file" accept=".pdf" />
-            <div id="search-container">
-                <input type="text" id="search-input" placeholder="検索...">
-                <button class="button" onclick="search()">検索</button>
-                <div id="search-results"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="thumbnails" id="thumbnails">
+                    <h3>サムネイル 🖼️</h3>
+                    <div class="thumbnail-container"></div>
+                </div>
+                <div class="search-section">
+                    <h3>検索 🔍</h3>
+                    <input type="text" id="searchInput" placeholder="テキストを検索...">
+                    <div id="searchResults"></div>
+                </div>
             </div>
-            <div id="pdf-viewer"></div>
-            <div id="outline-container" style="display: none;"></div>
-        </div>
+        </aside>
 
-        <div id="properties" class="tab-content">
-            <h2>PDFプロパティ</h2>
-            <ul id="properties-list"></ul>
-        </div>
+        <main class="main-content" id="mainContent">
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-zone-content">
+                    <i class="fas fa-file-pdf fa-3x"></i>
+                    <p>PDFファイルをドラッグ&ドロップ</p>
+                    <p>または</p>
+                    <label class="file-input-label">
+                        ファイルを選択
+                        <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                    </label>
+                </div>
+            </div>
+
+            <div class="pdf-container" id="pdfContainer" style="display: none;">
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <button id="prevPage" class="tool-button">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="pageInfo">0 / 0</span>
+                        <button id="nextPage" class="tool-button">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="toolbar-center">
+                        <button id="zoomOut" class="tool-button">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <span id="zoomLevel">100%</span>
+                        <button id="zoomIn" class="tool-button">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <button id="print" class="tool-button">
+                            <i class="fas fa-print"></i>
+                        </button>
+                        <button id="download" class="tool-button">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="pdf-viewer">
+                    <canvas id="pdfViewer"></canvas>
+                </div>
+            </div>
+        </main>
     </div>
-
-
-    <div class="sidebar sidebar-right" id="rightSidebar">
-        <div id="thumbnail-container"></div>
-    </div>
-
-    <script>
-        let pdfDoc = null,
-            pageNum = 1,
-            pageRendering = false,
-            pageNumPending = null,
-            scale = 1.5,
-            currentRotation = 0;
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        let pdfFile = null;
-
-        function toggleSidebar(side) {
-            const sidebar = document.getElementById(`${side}Sidebar`);
-            sidebar.classList.toggle('open');
-        }
-
-        function openTab(evt, tabName) {
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.remove('active'));
-
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add('active');
-        }
-
-        document.getElementById('pdf-file').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    const arrayBuffer = event.target.result;
-                    pdfFile = file;
-                    loadPDF(arrayBuffer);
-                };
-                reader.readAsArrayBuffer(file);
-            }
-        });
-
-        function loadPDF(arrayBuffer) {
-            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-            loadingTask.promise.then(function (pdf) {
-                pdfDoc = pdf;
-                document.getElementById('page-count').textContent = pdf.numPages;
-                renderPage(pageNum);
-                generateThumbnails();
-                showProperties();
-            });
-        }
-
-        function renderPage(num) {
-            pageRendering = true;
-            pdfDoc.getPage(num).then(function (page) {
-                const viewport = page.getViewport({ scale: scale, rotation: currentRotation });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                const renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                const renderTask = page.render(renderContext);
-                renderTask.promise.then(function () {
-                    document.getElementById('pdf-viewer').appendChild(canvas);
-                    pageRendering = false;
-                    if (pageNumPending !== null) {
-                        renderPage(pageNumPending);
-                        pageNumPending = null;
-                    }
-                });
-            });
-        }
-
-        function generateThumbnails() {
-            const thumbnailContainer = document.getElementById('thumbnail-container');
-            thumbnailContainer.innerHTML = ''; // clear previous thumbnails
-
-            for (let i = 1; i <= pdfDoc.numPages; i++) {
-                pdfDoc.getPage(i).then(function (page) {
-                    const viewport = page.getViewport({ scale: 0.3 });
-                    const thumbnailCanvas = document.createElement('canvas');
-                    const thumbnailCtx = thumbnailCanvas.getContext('2d');
-                    thumbnailCanvas.width = viewport.width;
-                    thumbnailCanvas.height = viewport.height;
-                    page.render({
-                        canvasContext: thumbnailCtx,
-                        viewport: viewport
-                    }).promise.then(function () {
-                        const thumbnailDiv = document.createElement('div');
-                        thumbnailDiv.classList.add('thumbnail');
-                        thumbnailDiv.appendChild(thumbnailCanvas);
-                        const label = document.createElement('div');
-                        label.classList.add('thumbnail-label');
-                        label.textContent = `ページ ${i}`;
-                        thumbnailDiv.appendChild(label);
-                        thumbnailDiv.addEventListener('click', function () {
-                            goToPage(i);
-                        });
-                        thumbnailContainer.appendChild(thumbnailDiv);
-                    });
-                });
-            }
-        }
-
-        function goToPage(num) {
-            if (num >= 1 && num <= pdfDoc.numPages) {
-                pageNum = num;
-                renderPage(pageNum);
-            }
-        }
-
-        function prevPage() {
-            if (pageNum <= 1) return;
-            pageNum--;
-            renderPage(pageNum);
-        }
-
-        function nextPage() {
-            if (pageNum >= pdfDoc.numPages) return;
-            pageNum++;
-            renderPage(pageNum);
-        }
-
-        function zoomIn() {
-            scale += 0.1;
-            renderPage(pageNum);
-        }
-
-        function zoomOut() {
-            if (scale <= 0.5) return;
-            scale -= 0.1;
-            renderPage(pageNum);
-        }
-
-        function rotateClockwise() {
-            currentRotation = (currentRotation + 90) % 360;
-            renderPage(pageNum);
-        }
-
-        function rotateCounterClockwise() {
-            currentRotation = (currentRotation - 90) % 360;
-            renderPage(pageNum);
-        }
-
-        function toggleOutline() {
-            const outlineContainer = document.getElementById('outline-container');
-            if (outlineContainer.style.display === 'none') {
-                pdfDoc.getOutline().then(function (outline) {
-                    let outlineHtml = '';
-                    if (outline) {
-                        outlineHtml = '<ul>';
-                        outline.forEach(function (item) {
-                            outlineHtml += `<li><button onclick="goToPage(${item.dest[0].num})">${item.title}</button></li>`;
-                        });
-                        outlineHtml += '</ul>';
-                    } else {
-                        outlineHtml = '<p>目次がありません。</p>';
-                    }
-                    outlineContainer.innerHTML = outlineHtml;
-                    outlineContainer.style.display = 'block';
-                });
-            } else {
-                outlineContainer.style.display = 'none';
-            }
-        }
-
-        function search() {
-            const searchText = document.getElementById('search-input').value.trim();
-            if (!searchText) return;
-
-            const searchResults = document.getElementById('search-results');
-            searchResults.innerHTML = '';
-
-            const numPages = pdfDoc.numPages;
-            for (let i = 1; i <= numPages; i++) {
-                pdfDoc.getPage(i).then(function (page) {
-                    page.getTextContent().then(function (textContent) {
-                        const text = textContent.items.map(item => item.str).join(' ');
-                        if (text.includes(searchText)) {
-                            const resultItem = document.createElement('div');
-                            resultItem.classList.add('search-result');
-                            resultItem.textContent = `ページ ${i}`;
-                            resultItem.addEventListener('click', function () {
-                                goToPage(i);
-                            });
-                            searchResults.appendChild(resultItem);
-                        }
-                    });
-                });
-            }
-        }
-
-        function downloadPDF() {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(pdfFile);
-            link.download = 'downloaded.pdf';
-            link.click();
-        }
-
-        function printPDF() {
-            const pdfUrl = URL.createObjectURL(pdfFile);
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = pdfUrl;
-            document.body.appendChild(iframe);
-            iframe.contentWindow.print();
-        }
-
-        function toggleFullScreen() {
-            const elem = document.documentElement;
-            if (!document.fullscreenElement) {
-                elem.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        function showProperties() {
-            pdfDoc.getMetadata().then(function (data) {
-                const propertiesList = document.getElementById('properties-list');
-                propertiesList.innerHTML = '';
-                for (const key in data.info) {
-                    if (data.info.hasOwnProperty(key)) {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `${key}: ${data.info[key]}`;
-                        propertiesList.appendChild(listItem);
-                    }
-                }
-            });
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
