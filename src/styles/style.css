@@ -29,7 +29,7 @@ body {
     position: relative;
     overflow: auto;
     scrollbar-width: none; /* Firefox用 */
-    -ms-overflow-style: none; /* IE/Edge用 */
+    -ms-overflow-style: none;/* IE/Edge用 */
 }
 
 /* Webkit (Chrome, Safari)用のスクロールバー非表示 */
@@ -164,36 +164,35 @@ body {
     flex-grow: 1;
 }
 
-.taskbar-item {
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+/* 検索バー */
+#search-container {
     display: flex;
     align-items: center;
-    gap: 8px;
-    position: relative;
+    margin-right: 16px;
+    flex-grow: 1;
+    max-width: 600px;
 }
 
-.taskbar-item .close-button {
-    background: none;
-    border: none;
+#search-bar {
+    width: 100%;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
+    padding: 0 16px;
     color: var(--text-primary);
     font-size: 14px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.2s, background-color 0.2s;
-    margin-left: 4px;
+    transition: all 0.2s;
 }
 
-.taskbar-item:hover .close-button {
-    opacity: 1;
+#search-bar:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    outline: none;
 }
 
-.taskbar-item .close-button:hover {
-    background: rgba(255, 255, 255, 0.1);
+#search-bar::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* スタートメニュー */
