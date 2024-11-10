@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313Py Editor 🐍</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ext-language_tools.js"></script>
+</head>
+<body>
+    <div class="notification-container" id="notificationContainer"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-text">8313Py Editor</span>
+                <span class="logo-emoji">🐍</span>
+            </div>
+            <div class="theme-toggle">
+                <button id="themeToggle">🌙</button>
+            </div>
+        </header>
+
+        <div class="toolbar">
+            <button class="tool-btn" id="newFile">新規 📄</button>
+            <button class="tool-btn" id="openFile">開く 📂</button>
+            <button class="tool-btn" id="saveFile">保存 💾</button>
+            <button class="tool-btn" id="formatCode">整形 ✨</button>
+            <input type="file" id="fileInput" style="display: none" accept=".py">
+        </div>
+
+        <div class="tab-container" id="tabContainer">
+            <!-- タブはJavaScriptで動的に追加 -->
+        </div>
+
+        <div class="editor-container">
+            <div id="editor"></div>
+        </div>
+
+        <footer>
+            <div class="status-bar">
+                <span id="cursorPosition">行: 1, 列: 1</span>
+                <span id="fileInfo">Python</span>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

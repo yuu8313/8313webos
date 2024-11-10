@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313 CSS Editor 🎨</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ext-language_tools.js"></script>
+</head>
+<body>
+    <div class="notification" id="notification">
+        <span class="notification-message"></span>
+        <span class="notification-close">×</span>
+    </div>
+
+    <div class="container glass">
+        <header class="toolbar glass">
+            <div class="file-operations">
+                <button onclick="newFile()" class="btn" title="新規ファイル">
+                    <span class="emoji">📄</span>新規
+                </button>
+                <button onclick="openFile()" class="btn" title="開く">
+                    <span class="emoji">📂</span>開く
+                </button>
+                <button onclick="saveFile()" class="btn" title="保存">
+                    <span class="emoji">💾</span>保存
+                </button>
+            </div>
+            <div class="edit-operations">
+                <button onclick="undo()" class="btn" title="元に戻す">
+                    <span class="emoji">↩️</span>戻す
+                </button>
+                <button onclick="redo()" class="btn" title="やり直し">
+                    <span class="emoji">↪️</span>進む
+                </button>
+                <button onclick="formatCode()" class="btn" title="コード整形">
+                    <span class="emoji">🎨</span>整形
+                </button>
+                <button onclick="toggleSearch()" class="btn" title="検索">
+                    <span class="emoji">🔍</span>検索
+                </button>
+            </div>
+        </header>
+
+        <div class="editor-container">
+            <div class="tabs glass" id="tabs"></div>
+            <div id="editor" class="glass"></div>
+        </div>
+
+        <div class="search-panel glass" id="searchPanel">
+            <div class="search-inputs">
+                <input type="text" id="searchInput" placeholder="検索..." class="glass-input">
+                <input type="text" id="replaceInput" placeholder="置換..." class="glass-input">
+            </div>
+            <div class="search-buttons">
+                <button onclick="findNext()" class="btn">次を検索</button>
+                <button onclick="replace()" class="btn">置換</button>
+                <button onclick="replaceAll()" class="btn">すべて置換</button>
+                <button onclick="toggleSearch()" class="btn close-btn">✖️</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".css" style="display: none">
+    <script src="script.js"></script>
+</body>
+</html>
