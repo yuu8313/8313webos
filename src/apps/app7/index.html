@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>いろいろ詰め合わせ</title>
+    <link rel="stylesheet" href="OS/style.css">
+</head>
+<body>
+    <!-- デスクトップ領域 -->
+    <div id="desktop">
+        <!-- アプリアイコンはJSで動的に追加 -->
+    </div>
+
+    <!-- ウィンドウコンテナ -->
+    <div id="windows-container"></div>
+
+    <!-- タスクバー -->
+    <div id="taskbar">
+        <button id="start-button">
+            <span>≡</span>
+        </button>
+        <div id="running-apps"></div>
+        <div id="clock"></div>
+    </div>
+
+    <!-- スタートメニュー -->
+    <div id="start-menu" class="hidden">
+        <div class="apps-grid">
+            <!-- アプリ一覧はJSで動的に追加 -->
+        </div>
+    </div>
+</body>
+<script src="OS/script.js"></script>
+</html>

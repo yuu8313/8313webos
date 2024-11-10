@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313カジノ風乱数メーカー</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-panel">
+            <h1>8313カジノ風乱数メーカー</h1>
+            <div class="input-section">
+                <div class="range-inputs">
+                    <div class="input-group">
+                        <label for="min">最小値</label>
+                        <input type="number" id="min" value="0" min="0" max="9999">
+                    </div>
+                    <div class="input-group">
+                        <label for="max">最大値</label>
+                        <input type="number" id="max" value="9999" min="0" max="9999">
+                    </div>
+                </div>
+                <button id="generate" class="neon-button">Generate!</button>
+            </div>
+            <div class="result-display">
+                <div class="slot-container">
+                    <div class="slot" id="slot1">0</div>
+                    <div class="slot" id="slot2">0</div>
+                    <div class="slot" id="slot3">0</div>
+                    <div class="slot" id="slot4">0</div>
+                </div>
+            </div>
+        </div>
+        <div id="notification" class="notification"></div>
+    </div>
+    <script src="ugoki.js"></script>
+</body>
+</html>

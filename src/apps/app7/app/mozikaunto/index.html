@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313文字数カウント</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-bg: #1a1a2e;
+            --card-bg: rgba(44, 62, 80, 0.8);
+            --accent: #4FD1C5;
+            --text: #e1e1e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+            background: var(--main-bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--accent), #3498DB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(79, 209, 197, 0.3);
+        }
+
+        .text-input {
+            width: 100%;
+            height: 200px;
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text);
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(79, 209, 197, 0.1);
+        }
+
+        .text-input:focus {
+            outline: none;
+            box-shadow: 0 0 30px rgba(79, 209, 197, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(79, 209, 197, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">8313文字数カウント</h1>
+        <textarea class="text-input" id="input" placeholder="ここにテキストを入力してください..."></textarea>
+        <div class="stats-grid" id="stats"></div>
+    </div>
+
+    <script>
+        const input = document.getElementById('input');
+        const stats = document.getElementById('stats');
+
+        function countCharacters(text) {
+            const normalCount = text.length;
+            const noSpaceCount = text.replace(/\s/g, '').length;
+            const noLineBreakCount = text.replace(/\n/g, '').length;
+            const noSpaceLineBreakCount = text.replace(/[\s\n]/g, '').length;
+            
+            const fullWidthCount = text.split('').reduce((acc, char) => {
+                return acc + (char.match(/[^\x01-\x7E]/) ? 1 : 0.5);
+            }, 0);
+
+            const fullWidthNoSpaceCount = text.replace(/\s/g, '').split('').reduce((acc, char) => {
+                return acc + (char.match(/[^\x01-\x7E]/) ? 1 : 0.5);
+            }, 0);
+
+            const lineCount = text.split('\n').length;
+            const manuscriptPages = Math.ceil(normalCount / 400);
+
+            const utf8Bytes = new TextEncoder().encode(text).length;
+            const utf16Bytes = text.length * 2;
+            
+            // Shift-JIS approximation (rough estimate)
+            const sjisBytes = text.split('').reduce((acc, char) => {
+                return acc + (char.match(/[^\x01-\x7E]/) ? 2 : 1);
+            }, 0);
+
+            // EUC-JP approximation (rough estimate)
+            const eucBytes = sjisBytes;
+
+            // JIS approximation (rough estimate)
+            const jisBytes = sjisBytes;
+
+            return {
+                normal: normalCount,
+                fullWidth: Math.ceil(fullWidthCount),
+                noSpace: noSpaceCount,
+                noLineBreak: noLineBreakCount,
+                noSpaceLineBreak: noSpaceLineBreakCount,
+                fullWidthNoSpace: Math.ceil(fullWidthNoSpaceCount),
+                lines: lineCount,
+                manuscriptPages: manuscriptPages,
+                utf8: utf8Bytes,
+                utf16: utf16Bytes,
+                sjis: sjisBytes,
+                euc: eucBytes,
+                jis: jisBytes
+            };
+        }
+
+        function updateStats() {
+            const text = input.value;
+            const counts = countCharacters(text);
+            
+            stats.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">通常の文字数</div>
+                    <div class="stat-value">${counts.normal}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">全角換算文字数</div>
+                    <div class="stat-value">${counts.fullWidth}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">空白除外文字数</div>
+                    <div class="stat-value">${counts.noSpace}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">改行除外文字数</div>
+                    <div class="stat-value">${counts.noLineBreak}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">空白・改行除外文字数</div>
+                    <div class="stat-value">${counts.noSpaceLineBreak}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">全角換算（空白除外）</div>
+                    <div class="stat-value">${counts.fullWidthNoSpace}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">行数</div>
+                    <div class="stat-value">${counts.lines}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">原稿用紙（400字）</div>
+                    <div class="stat-value">${counts.manuscriptPages}枚</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">UTF-8バイト数</div>
+                    <div class="stat-value">${counts.utf8}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">UTF-16バイト数</div>
+                    <div class="stat-value">${counts.utf16}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Shift-JISバイト数</div>
+                    <div class="stat-value">${counts.sjis}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">EUC-JPバイト数</div>
+                    <div class="stat-value">${counts.euc}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">JISバイト数</div>
+                    <div class="stat-value">${counts.jis}</div>
+                </div>
+            `;
+        }
+
+        input.addEventListener('input', updateStats);
+        updateStats(); // Initial update
+    </script>
+</body>
+</html>

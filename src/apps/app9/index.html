@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG変換ツール</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.10/umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #e94560;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        #fileInput {
+            display: none;
+        }
+        .upload-btn {
+            background: #e94560;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .upload-btn:hover {
+            background: #ff6b6b;
+            transform: scale(1.05);
+        }
+        #convertBtn {
+            background: #0f3460;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        #convertBtn:hover {
+            background: #16213e;
+            transform: scale(1.05);
+        }
+        #downloadLinks {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 2rem;
+        }
+        .download-link {
+            background: #533483;
+            color: white;
+            padding: 10px;
+            border-radius: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .download-link:hover {
+            background: #6b44ad;
+            transform: translateY(-3px);
+        }
+        @keyframes convert {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .converting {
+            animation: convert 2s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SVG変換ツール</h1>
+        <label for="fileInput" class="upload-btn">SVGファイルを選択</label>
+        <input type="file" id="fileInput" accept=".svg">
+        <div id="fileName"></div>
+        <button id="convertBtn" disabled>変換</button>
+        <div id="downloadLinks"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const convertBtn = document.getElementById('convertBtn');
+        const downloadLinks = document.getElementById('downloadLinks');
+        const fileName = document.getElementById('fileName');
+        let svgContent = '';
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                fileName.textContent = `選択されたファイル: ${file.name}`;
+                convertBtn.disabled = false;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    svgContent = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        convertBtn.addEventListener('click', async () => {
+            if (!svgContent) return;
+
+            convertBtn.classList.add('converting');
+            convertBtn.disabled = true;
+
+            const formats = [
+                { name: 'PNG', mime: 'image/png', ext: 'png' },
+                { name: 'JPEG', mime: 'image/jpeg', ext: 'jpg' },
+                { name: 'WebP', mime: 'image/webp', ext: 'webp' },
+                { name: 'GIF', mime: 'image/gif', ext: 'gif' },
+                { name: 'PDF', mime: 'application/pdf', ext: 'pdf' },
+                { name: 'EPS', mime: 'application/postscript', ext: 'eps' },
+                { name: 'HTML', mime: 'text/html', ext: 'html' },
+                { name: 'TXT', mime: 'text/plain', ext: 'txt' }
+            ];
+
+            downloadLinks.innerHTML = '';
+
+            for (const format of formats) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                await canvg.Canvg.from(ctx, svgContent);
+                const canvgInstance = await canvg.Canvg.from(ctx, svgContent);
+                await canvgInstance.render();
+
+                let blob;
+                if (format.name === 'HTML') {
+                    const htmlContent = `
+                        <!DOCTYPE html>
+                        <html lang="ja">
+                        <head>
+                            <meta charset="UTF-8">
+                            <title>Converted SVG</title>
+                        </head>
+                        <body>
+                            ${svgContent}
+                        </body>
+                        </html>
+                    `;
+                    blob = new Blob([htmlContent], { type: format.mime });
+                } else if (format.name === 'TXT') {
+                    blob = new Blob([svgContent], { type: format.mime });
+                } else if (format.name === 'PDF' || format.name === 'EPS') {
+                    // Note: PDF and EPS conversion is not fully implemented here
+                    // You would need a more complex library to handle these formats
+                    blob = new Blob([`PDF/EPS conversion not implemented for ${format.name}`], { type: 'text/plain' });
+                } else {
+                    blob = await new Promise(resolve => canvas.toBlob(resolve, format.mime));
+                }
+
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `converted.${format.ext}`;
+                link.textContent = `${format.name}をダウンロード`;
+                link.className = 'download-link';
+                downloadLinks.appendChild(link);
+            }
+
+            convertBtn.classList.remove('converting');
+            convertBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>

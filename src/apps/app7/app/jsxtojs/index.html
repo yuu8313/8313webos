@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSX トランスパイラー ✨</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="glass-header">
+            <h1>JSX トランスパイラー ✨</h1>
+            <div class="header-buttons">
+                <button id="helpBtn" class="glass-button">ヘルプ 📚</button>
+                <button id="uploadBtn" class="glass-button">ファイルを開く 📂</button>
+                <input type="file" id="fileInput" accept=".jsx,.js" style="display: none;">
+            </div>
+        </header>
+
+        <main class="editor-container">
+            <div class="editor-pane glass-panel">
+                <div class="pane-header">
+                    <h2>JSX コード</h2>
+                    <div class="pane-actions">
+                        <button id="pasteBtn" class="action-button">貼り付け 📋</button>
+                        <button id="clearBtn" class="action-button">クリア 🗑️</button>
+                    </div>
+                </div>
+                <textarea id="jsxInput" placeholder="ここにJSXコードを入力してください..." spellcheck="false"></textarea>
+            </div>
+
+            <div class="editor-pane glass-panel">
+                <div class="pane-header">
+                    <h2>JavaScript 出力</h2>
+                    <div class="pane-actions">
+                        <button id="copyBtn" class="action-button">コピー 📝</button>
+                        <button id="downloadBtn" class="action-button">ダウンロード 💾</button>
+                    </div>
+                </div>
+                <pre id="jsOutput"><code></code></pre>
+            </div>
+        </main>
+
+        <div id="notification" class="notification"></div>
+        
+        <div id="helpModal" class="modal">
+            <div class="modal-content glass-panel">
+                <h2>使い方 📚</h2>
+                <p>1. JSXコードを左側のパネルに入力またはファイルをアップロード</p>
+                <p>2. 自動的にJavaScriptコードに変換されます</p>
+                <p>3. 右側のパネルから結果をコピーまたはダウンロード</p>
+                <div class="example-code">
+                    <h3>例:</h3>
+                    <pre><code>const App = () => {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;こんにちは！&lt;/h1&gt;
+    &lt;/div&gt;
+  );
+};</code></pre>
+                </div>
+                <button id="closeHelpBtn" class="glass-button">閉じる ✖️</button>
+            </div>
+        </div>
+    </div>
+    <script src="ugoki.js"></script>
+</body>
+</html>
