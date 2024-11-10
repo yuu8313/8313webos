@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>本気の8313OS</title>
+    <title>8313WebOS</title>
     <link rel="stylesheet" href="src/styles/style.css">
     <link rel="icon" href="https://github.com/yuu8313/hukugoukensakuenzin/blob/main/ICON.png?raw=true" type="image/png">
 </head>
@@ -17,12 +17,15 @@
         <div id="windows-container"></div>
     </div>
 
-    <!-- タスクバー -->
+     <!-- タスクバー -->
     <div id="taskbar">
         <button id="start-button">
             <span class="icon">8313</span>
         </button>
         <div id="running-apps"></div>
+        <div id="search-container">
+            <input type="text" id="search-bar" placeholder="Google で検索または URL を入力">
+        </div>
         <div id="system-tray">
             <span class="time"></span>
         </div>
@@ -42,5 +45,6 @@
     <script src="src/js/system.js"></script>
     <script src="src/js/shortcut.js"></script>
     <script src="src/js/main.js"></script>
+    <script src="src/js/search.js"></script>
 </body>
 </html>
