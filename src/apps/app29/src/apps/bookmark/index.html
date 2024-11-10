@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Bookmarks</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --text-primary: #333333;
+            --accent-color: #2c3e50;
+            --card-bg: #f5f5f5;
+            --hover-color: #34495e;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+        }
+
+        .dark-theme {
+            --bg-primary: #1a1a1a;
+            --text-primary: #ffffff;
+            --card-bg: #2d2d2d;
+            --hover-color: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .login-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent-color);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            background: var(--error-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            margin-left: 1rem;
+            display: none;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .bookmark-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem;
+            border: 2px solid var(--card-bg);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        input:focus {
+            outline: 2px solid var(--accent-color);
+        }
+
+        .add-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .add-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .bookmark-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .bookmark-card:hover {
+            border-color: var(--accent-color);
+            transform: translateX(10px);
+        }
+
+        .bookmark-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .bookmark-url {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .visit-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--success-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            display: none;
+        }
+
+        .visit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: 8px;
+            color: white;
+            display: none;
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--error-color);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .bookmark-form {
+                flex-direction: column;
+            }
+            
+            input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div id="login-screen" class="login-container">
+        <div class="login-form">
+            <h2 style="margin-bottom: 1rem;">Privacy Bookmarks</h2>
+            <input type="password" id="password-input" class="password-input" placeholder="パスワードを入力">
+            <button id="login-button" class="login-btn">ログイン</button>
+        </div>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <div class="container">
+            <header>
+                <h1>Privacy Bookmarks</h1>
+                <button id="theme-toggle" class="theme-toggle">🌙</button>
+            </header>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="add">追加</button>
+                <button class="tab-btn" data-tab="list">一覧</button>
+            </div>
+
+            <div class="tab-content active" id="add">
+                <div class="bookmark-form">
+                    <input type="url" id="url-input" placeholder="URLを入力してください" required>
+                    <input type="text" id="title-input" placeholder="タイトルを入力してください" required>
+                    <button id="add-bookmark" class="add-btn">追加</button>
+                </div>
+            </div>
+
+            <div class="tab-content" id="list">
+                <div class="bookmarks-container" id="bookmarks-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginScreen = document.getElementById('login-screen');
+            const mainContent = document.getElementById('main-content');
+            const passwordInput = document.getElementById('password-input');
+            const loginButton = document.getElementById('login-button');
+            const urlInput = document.getElementById('url-input');
+            const titleInput = document.getElementById('title-input');
+            const addButton = document.getElementById('add-bookmark');
+            const bookmarksList = document.getElementById('bookmarks-list');
+            const themeToggle = document.getElementById('theme-toggle');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const notification = document.getElementById('notification');
+
+            // パスワード確認
+            const checkPassword = () => {
+                const storedPassword = localStorage.getItem('privacyos-bookmark-PW');
+                const inputPassword = passwordInput.value;
+
+                if (!storedPassword) {
+                    // 初回設定
+                    localStorage.setItem('privacyos-bookmark-PW', inputPassword);
+                    showNotification('パスワードを設定しました', 'success');
+                    return true;
+                }
+
+                return storedPassword === inputPassword;
+            };
+
+            // ログイン処理
+            loginButton.addEventListener('click', () => {
+                if (checkPassword()) {
+                    loginScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    loadBookmarks();
+                } else {
+                    showNotification('パスワードが違います', 'error');
+                }
+            });
+
+            // 通知表示
+            const showNotification = (message, type) => {
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            };
+
+            // ブックマークの読み込み
+            let bookmarks = [];
+            const loadBookmarks = () => {
+                const stored = localStorage.getItem('privacyos-bookmark');
+                if (stored) {
+                    bookmarks = JSON.parse(stored);
+                    renderBookmarks();
+                }
+            };
+
+            // タブの切り替え
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    button.classList.add('active');
+                    document.getElementById(button.dataset.tab).classList.add('active');
+                });
+            });
+
+            // テーマの切り替え
+            const toggleTheme = () => {
+                document.body.classList.toggle('dark-theme');
+                themeToggle.textContent = document.body.classList.contains('dark-theme') ? '🌙' : '☀️';
+                localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+            };
+
+            if (localStorage.getItem('theme') === 'light') {
+                toggleTheme();
+            }
+
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // ブックマークの表示
+            const renderBookmarks = () => {
+                bookmarksList.innerHTML = '';
+                bookmarks.forEach((bookmark, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'bookmark-card';
+                    card.innerHTML = `
+                        <div class="bookmark-title">${bookmark.title}</div>
+                        <div class="bookmark-url">${bookmark.url}</div>
+                        <div class="button-container">
+                            <button class="visit-btn">開く</button>
+                            <button class="delete-btn">削除</button>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => {
+                        const buttons = card.querySelectorAll('.visit-btn, .delete-btn');
+                        buttons.forEach(btn => {
+                            btn.style.display = btn.style.display === 'none' ? 'inline-block' : 'none';
+                        });
+                    });
+
+                    const visitBtn = card.querySelector('.visit-btn');
+                    visitBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        window.open(bookmark.url, '_blank');
+                    });
+
+                    const deleteBtn = card.querySelector('.delete-btn');
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        bookmarks.splice(index, 1);
+                        localStorage.setItem('privacyos-bookmark', JSON.stringify(bookmarks));
+                        renderBookmarks();
+                        showNotification('ブックマークを削除しました', 'success');
+                    });
+
+                    bookmarksList.appendChild(card);
+                });
+            };
+
+            // ブックマークの追加
+            const addBookmark = () => {
+                const url = urlInput.value.trim();
+                const title = titleInput.value.trim();
+
+                if (!url || !title) {
+                    showNotification('URLとタイトルを入力してください', 'error');
+                    return;
+                }
+
+                try {
+                    new URL(url);
+                } catch {
+                    showNotification('有効なURLを入力してください', 'error');
+                    return;
+                }
+
+                bookmarks.push({ url, title });
+                localStorage.setItem('privacyos-bookmark', JSON.stringify(bookmarks));
+                
+                urlInput.value = '';
+                titleInput.value = '';
+                
+                renderBookmarks();
+                showNotification('ブックマークを追加しました', 'success');
+            };
+
+            addButton.addEventListener('click', addBookmark);
+
+            titleInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addBookmark();
+                }
+            });
+
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    loginButton.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォルダー階層構造メモ作成機 📁</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <h1>フォルダー階層構造メモ作成機 📁</h1>
+            
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-content">
+                    <p>📂 ファイルをドラッグ＆ドロップ</p>
+                    <p>または</p>
+                    <input type="file" id="folderInput" webkitdirectory directory multiple class="hidden">
+                    <button onclick="document.getElementById('folderInput').click()" class="btn">
+                        フォルダーを選択 📁
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-area">
+                <h2>プレビュー 👀</h2>
+                <pre id="treePreview" class="tree-preview"></pre>
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="downloadAsTxt()" class="btn">
+                    📥 ダウンロード
+                </button>
+                <button onclick="copyToClipboard()" class="btn">
+                    📋 コピー
+                </button>
+                <button onclick="resetTree()" class="btn danger">
+                    🗑️ リセット
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
