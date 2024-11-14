@@ -16,7 +16,7 @@ class ApplicationManager {
             { id: '2048', name: '2048ゲーム', path: 'src/apps/app22/index.html', icon: '2048', iconType: 'emoji' },
             { id: 'iroiro', name: 'いろいろ', path: 'src/apps/app7/index.html', icon: '🔧', iconType: 'emoji' },
 
-
+            { id: 'perplexity', name: 'Perplexity', path: 'https://www.perplexity.ai/', icon: 'src/linkicon/perplexity.png', iconType: 'image',directRedirect: true },
 
 
 
@@ -61,7 +61,6 @@ class ApplicationManager {
             const icon = document.createElement('div');
             icon.className = 'desktop-icon';
             
-            // アイコンの表示方法を判定
             const iconContent = app.iconType === 'image' 
                 ? `<img src="${app.icon}" class="icon-image" alt="${app.name}">` 
                 : `<span class="icon">${app.icon}</span>`;
@@ -88,7 +87,6 @@ class ApplicationManager {
             const appItem = document.createElement('div');
             appItem.className = 'app-item';
             
-            // アイコンの表示方法を判定
             const iconContent = app.iconType === 'image' 
                 ? `<img src="${app.icon}" class="icon-image" alt="${app.name}">` 
                 : `<span class="icon">${app.icon}</span>`;
@@ -109,13 +107,17 @@ class ApplicationManager {
 
     // アプリケーションの起動
     launchApplication(app) {
-        // ウィンドウを作成
+        if (app.directRedirect) {
+            // 直接リダイレクトする場合
+            window.location.href = app.path;
+            return;
+        }
+
+        // 通常のアプリケーション起動処理
         const windowId = windowManager.createWindow(app);
-        
-        // タスクバーにアイテムを追加（アプリ名のみ表示）
         taskbarManager.addTaskbarItem(windowId, {
             ...app,
-            icon: app.name // アイコンの代わりにアプリ名を使用
+            icon: app.name
         });
     }
 
