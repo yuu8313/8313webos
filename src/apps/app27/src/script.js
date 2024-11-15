@@ -1,5 +1,5 @@
     const apps = [
-        { name: 'メモ帳', icon: '📝', path: 'app/notes/notes.html' },
+        { name: 'メモ帳', icon: '📝', path: 'app/notes/index.html' },
         { name: '付箋メモ帳', icon: '🔖', path: 'app/husen/husen.html' },
         { name: 'チャットメモ帳', icon: '💬', path: 'app/chat/chat.html' },
         { name: 'TODOメモ帳', icon: '✅', path: 'app/todo/todo.html' },
