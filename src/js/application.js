@@ -9,14 +9,15 @@ class ApplicationManager {
             { id: 'dentaku', name: '計算機', path: 'src/apps/keisan/index.html', icon: 'src/image/icon3.png', iconType: 'image' },
             { id: 'memotyou', name: 'メモ帳', path: 'src/apps/memo/index.html', icon: 'src/image/icon27.png', iconType: 'image' },
             { id: 'husen', name: '付箋メモ', path: 'src/apps/husen/index.html', icon: '🔖', iconType: 'emoji' },
-            { id: 'ToDo', name: 'ToDoメモ', path: 'src/apps/todo/todo.html', icon: '✔', iconType: 'emoji' },
-            { id: 'Chat', name: 'チャットメモ', path: 'src/apps/chat/chat.html', icon: '💭', iconType: 'emoji' },
+            { id: 'ToDo', name: 'ToDoメモ', path: 'src/apps/todo/index.html', icon: '✔', iconType: 'emoji' },
+            { id: 'Chat', name: 'チャットメモ', path: 'src/apps/chat/index.html', icon: '💭', iconType: 'emoji' },
             { id: 'txtEditor', name: 'エディター', path: 'src/apps/Editor/index.html', icon: 'src/image/icon12.png', iconType: 'image' },
             { id: 'forudakaisou', name: 'フォルダー階層メモ', path: 'src/apps/folderkaisou/index.html', icon: '📁', iconType: 'emoji' },
             { id: 'mozisuukauntoandmozitikan', name: 'カウント&置換', path: 'src/apps/mozikaunntoandmozitikan/index.html', icon: 'A', iconType: 'emoji' },
             { id: 'video', name: 'videoplayer', path: 'src/apps/video/index.html', icon: 'src/image/icon30.png', iconType: 'image' },
             { id: 'qrsakusei', name: 'QRコード作成', path: 'src/apps/QR1/index.html', icon: '📱', iconType: 'emoji' },
             { id: 'qrsayomikomi', name: 'QRコード読み込み', path: 'src/apps/QR2/index.html', icon: '📱', iconType: 'emoji' },
+            { id: 'zip', name: 'ZIP解凍', path: 'src/apps/zip/index.html', icon: '📦', iconType: 'emoji' },
 
             { id: 'perplexity', name: 'Perplexity', path: 'https://www.perplexity.ai/', icon: 'src/linkicon/perplexity.png', iconType: 'image', directRedirect: true }
         ];
