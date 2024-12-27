@@ -1,0 +1,156 @@
+.ql-container {
+    border: none !important;
+    color: var(--text) !important;
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+.ql-editor {
+    color: var(--text) !important;
+    padding: var(--spacing-sm) !important;
+    min-height: 100px;
+    max-height: calc(80vh - 120px);
+    overflow-y: auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+.ql-editor::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ql-editor::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ql-editor::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 3px;
+}
+
+.ql-editor.ql-blank::before {
+    color: var(--text-secondary) !important;
+    font-style: normal !important;
+    opacity: 0.6;
+}
+
+.ql-toolbar {
+    border: none !important;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm) !important;
+    display: flex;
+    flex-wrap: nowrap !important;
+    gap: var(--spacing-xs);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.ql-toolbar::-webkit-scrollbar {
+    height: 6px;
+}
+
+.ql-toolbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ql-toolbar::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 3px;
+}
+
+.ql-formats {
+    margin-right: var(--spacing-sm) !important;
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+}
+
+.ql-snow .ql-picker {
+    color: var(--text) !important;
+    height: 24px !important;
+}
+
+.ql-snow .ql-stroke {
+    stroke: var(--text) !important;
+}
+
+.ql-snow .ql-fill {
+    fill: var(--text) !important;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options,
+.ql-snow .ql-picker-options,
+.ql-snow .ql-tooltip {
+    border-color: var(--border) !important;
+    background: var(--background) !important;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-effect);
+    z-index: 99999 !important;
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    max-height: 300px !important;
+    max-width: 90vw !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+    padding: var(--spacing-sm) !important;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options::-webkit-scrollbar,
+.ql-snow .ql-picker-options::-webkit-scrollbar,
+.ql-snow .ql-tooltip::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options::-webkit-scrollbar-track,
+.ql-snow .ql-picker-options::-webkit-scrollbar-track,
+.ql-snow .ql-tooltip::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options::-webkit-scrollbar-thumb,
+.ql-snow .ql-picker-options::-webkit-scrollbar-thumb,
+.ql-snow .ql-tooltip::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 3px;
+}
+
+.ql-snow .ql-picker.ql-color .ql-picker-label,
+.ql-snow .ql-picker.ql-background .ql-picker-label {
+    color: var(--text) !important;
+}
+
+.ql-snow .ql-picker-options .ql-picker-item:hover,
+.ql-snow .ql-picker-options .ql-picker-item.ql-selected {
+    background-color: var(--primary-light) !important;
+    color: var(--text) !important;
+}
+
+.ql-toolbar.ql-snow {
+    border-color: var(--border) !important;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label {
+    border-color: var(--border) !important;
+}
+
+@media (max-width: 768px) {
+    .ql-snow .ql-picker.ql-expanded .ql-picker-options,
+    .ql-snow .ql-picker-options,
+    .ql-snow .ql-tooltip {
+        max-width: 95vw !important;
+        max-height: 50vh !important;
+    }
+}

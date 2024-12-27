@@ -1,0 +1,56 @@
+#editor {
+    flex: 1;
+    background: rgba(26, 31, 44, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+.ql-toolbar.ql-snow {
+    border: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.ql-container.ql-snow {
+    border: none !important;
+    font-size: 16px;
+    height: auto;
+    min-height: calc(100vh - 200px);
+}
+
+.ql-editor {
+    padding: 2rem;
+    color: var(--text);
+    min-height: calc(100vh - 200px);
+}
+
+.ql-editor h1, .ql-editor h2, .ql-editor h3 {
+    color: var(--primary);
+}
+
+.ql-editor pre.ql-syntax {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+}
+
+.ql-snow .ql-stroke {
+    stroke: var(--text-secondary) !important;
+}
+
+.ql-snow .ql-fill {
+    fill: var(--text-secondary) !important;
+}
+
+.ql-snow .ql-picker {
+    color: var(--text-secondary) !important;
+}
+
+.ql-snow .ql-picker-options {
+    background: var(--background) !important;
+    border-color: var(--border) !important;
+}

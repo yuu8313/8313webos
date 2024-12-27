@@ -1,0 +1,140 @@
+.note {
+    position: absolute;
+    min-width: 200px;
+    min-height: 200px;
+    background: var(--note-bg);
+    border-radius: var(--border-radius-md);
+    backdrop-filter: var(--blur-effect);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-md);
+    touch-action: none;
+    transition: transform var(--transition-speed) var(--transition-function),
+                box-shadow var(--transition-speed) var(--transition-function),
+                background-color var(--transition-speed) var(--transition-function);
+    will-change: transform, box-shadow;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+}
+
+.note:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border);
+    cursor: move;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.note-header::before {
+    content: '⋮⋮';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    opacity: 0.5;
+    transition: opacity var(--transition-speed) var(--transition-function);
+}
+
+.note-header:hover::before {
+    opacity: 1;
+}
+
+.note-timestamp {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.note-controls {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.note-color {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+}
+
+.note-color::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.note-color::-webkit-color-swatch {
+    border: 2px solid var(--border);
+    border-radius: 50%;
+}
+
+.note-control {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all var(--transition-speed) var(--transition-function);
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+}
+
+.note-control:hover {
+    opacity: 1;
+    background: var(--primary-light);
+}
+
+.note-content {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+.note-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.note-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.note-content::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 3px;
+}
+
+.resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: se-resize;
+    background: var(--primary-hover);
+    border-radius: 0 0 var(--border-radius-md) 0;
+    transition: background var(--transition-speed) var(--transition-function);
+}
+
+.resize-handle:hover {
+    background: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .note {
+        min-width: 150px;
+        min-height: 150px;
+    }
+}

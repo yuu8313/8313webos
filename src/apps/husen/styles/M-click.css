@@ -1,0 +1,67 @@
+.context-menu {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px 0;
+    min-width: 150px;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
+.context-menu-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+    color: #1A1F2C;
+}
+
+.context-menu-item:hover {
+    background-color: #F1F0FB;
+}
+
+.context-menu-item.delete {
+    color: #ea384c;
+}
+
+.context-menu-item.delete:hover {
+    background-color: rgba(234, 56, 76, 0.1);
+}
+
+.context-menu-item i {
+    width: 16px;
+    text-align: center;
+}
+
+.context-menu-separator {
+    height: 1px;
+    background-color: #ddd;
+    margin: 5px 0;
+}
+
+.note.dragging-mode {
+    cursor: grab !important;
+}
+
+.note.dragging-mode:active {
+    cursor: grabbing !important;
+}
+
+.note.dragging-mode .note-header {
+    cursor: grab !important;
+}
+
+.note.dragging-mode .note-header:active {
+    cursor: grabbing !important;
+}
+
+.lock-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-right: 8px;
+}

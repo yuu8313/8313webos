@@ -1,0 +1,59 @@
+.drop-area {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(155, 135, 245, 0.1),
+    rgba(155, 135, 245, 0.05),
+    rgba(155, 135, 245, 0.1)
+  );
+  animation: glow-pulse 3s infinite;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drop-area::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(155, 135, 245, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shine 3s infinite linear;
+  pointer-events: none;
+}
+
+.drop-area.drag-over {
+  border-color: var(--primary);
+  background: rgba(155, 135, 245, 0.08);
+  transform: scale(1.02);
+  animation: border-glow 1.5s infinite, glow-pulse 2s infinite;
+}
+
+.drop-area.drag-over::before {
+  animation: shine 2s infinite linear;
+}
+
+.drop-area:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(155, 135, 245, 0.2);
+}
+
+.drop-area i {
+  font-size: 3.5rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.drop-area.drag-over i {
+  transform: scale(1.1);
+  color: var(--primary);
+}

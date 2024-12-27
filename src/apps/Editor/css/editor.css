@@ -1,0 +1,28 @@
+@import './variables.css';
+
+.ace-editor {
+  flex-grow: 1;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.ace-editor .ace_gutter {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.ace-editor .ace_print-margin {
+  display: none !important;
+}
+
+.ace-editor .ace_cursor {
+  border-left: 2px solid var(--accent);
+}
+
+.ace-editor .ace_marker-layer .ace_selection {
+  background: rgba(155, 135, 245, 0.3);
+}
+
+.ace-editor .ace_marker-layer .ace_active-line {
+  background: var(--glass-bg);
+}

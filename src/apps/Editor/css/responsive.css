@@ -1,0 +1,39 @@
+@import './variables.css';
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-wrap: wrap;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+  
+  .tool-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 14px;
+  }
+  
+  .tab {
+    min-width: 100px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .notification {
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    transform: translateY(-150%);
+  }
+  
+  .notification.show {
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 1200px) {
+  .ace-editor {
+    font-size: 16px;
+  }
+  
+  .toolbar {
+    padding: var(--spacing-lg);
+  }
+}

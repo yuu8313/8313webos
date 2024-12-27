@@ -1,0 +1,128 @@
+@import './variables.css';
+
+.toolbar {
+  padding: var(--spacing-md);
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--glass-border);
+  z-index: var(--z-toolbar);
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(8px);
+  flex-wrap: nowrap;
+}
+
+.file-operations, .edit-operations {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.tool-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: 500;
+  min-width: 36px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.tool-btn:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--accent);
+}
+
+.tool-btn:active {
+  transform: translateY(0);
+}
+
+.tool-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.tool-btn-group {
+  display: flex;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  background: var(--bg-primary);
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+}
+
+.language-select {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.language-select:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.language-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-hover);
+}
+
+.language-select option {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: var(--spacing-sm);
+}
+
+.toolbar p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-wrap: wrap;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+  
+  .tool-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 14px;
+  }
+  
+  .tool-btn-group {
+    flex-wrap: wrap;
+  }
+  
+  .language-select {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .toolbar {
+    padding: var(--spacing-lg);
+  }
+  
+  .tool-btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+}

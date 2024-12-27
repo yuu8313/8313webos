@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ファイル構造ビジュアライザー</title>
+    <link rel="stylesheet" href="styles/variables.css">
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/buttons.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="styles/notifications.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="notification" id="notification"></div>
+        
+        <div class="content">
+            <h1>ファイル構造ビジュアライザー</h1>
+            <p class="subtitle">フォルダをドロップまたは選択してください</p>
+            
+            <div class="drop-area" id="dropArea">
+                <i class="fas fa-folder-open" style="color: #FFFFFF;"></i>
+                <p>ここにフォルダをドロップ</p>
+                <span>または</span>
+                <button class="browse-btn" id="browseBtn">
+                    フォルダを参照
+                </button>
+                <input type="file" id="fileInput" webkitdirectory directory multiple hidden>
+            </div>
+
+            <div class="result-area glass-panel" id="resultArea">
+                <div class="result-header">
+                    <h2>フォルダ構造</h2>
+                    <div class="actions">
+                        <button class="action-btn" id="copyBtn" title="コピー">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="action-btn" id="downloadBtn" title="ダウンロード">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="reset-btn" id="resetBtn" title="リセット">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <pre id="structureOutput"></pre>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

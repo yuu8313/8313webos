@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字置換＆文字数カウンター</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-panel">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="replace">文字置換</button>
+                <button class="tab-btn" data-tab="count">文字数カウント</button>
+            </div>
+            
+            <div class="input-area">
+                <textarea id="sourceText" placeholder="ここにテキストを入力してください..."></textarea>
+                <button id="copyBtn" class="icon-btn">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+
+            <div class="tab-content active" id="replaceTab">
+                <div id="replaceFields">
+                    <div class="replace-field">
+                        <input type="text" placeholder="検索文字" class="search-text">
+                        <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                        <input type="text" placeholder="置換文字" class="replace-text">
+                        <button class="delete-field icon-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="addFieldBtn" class="action-btn">
+                        <i class="fas fa-plus"></i> フィールド追加
+                    </button>
+                    <button id="replaceBtn" class="action-btn primary">
+                        <i class="fas fa-sync"></i> 置換実行
+                    </button>
+                </div>
+            </div>
+
+            <div class="tab-content" id="countTab">
+                <div class="count-grid">
+                    <div class="count-item">
+                        <span class="count-label">通常の文字数</span>
+                        <span class="count-value" id="normalCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">全角換算文字数</span>
+                        <span class="count-value" id="fullWidthCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">空白除外文字数</span>
+                        <span class="count-value" id="noSpaceCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">改行除外文字数</span>
+                        <span class="count-value" id="noLineBreakCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">空白・改行除外</span>
+                        <span class="count-value" id="noSpaceLineCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">全角換算（空白除外）</span>
+                        <span class="count-value" id="fullWidthNoSpaceCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">行数</span>
+                        <span class="count-value" id="lineCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">原稿用紙（400字）</span>
+                        <span class="count-value" id="manuscriptCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">UTF-8バイト数</span>
+                        <span class="count-value" id="utf8Count">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">UTF-16バイト数</span>
+                        <span class="count-value" id="utf16Count">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">Shift-JISバイト数</span>
+                        <span class="count-value" id="sjisCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">EUC-JPバイト数</span>
+                        <span class="count-value" id="eucjpCount">0</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-label">JISバイト数</span>
+                        <span class="count-value" id="jisCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="notification" class="notification"></div>
+    <script src="script.js"></script>
+</body>
+</html>

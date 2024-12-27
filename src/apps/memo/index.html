@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313-メモ帳</title>
+    <link rel="icon" href="https://github.com/yuu8313/hukugoukensakuenzin/blob/main/ICON.png?raw=true" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/editor.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <style>
+        .fa-bars, .fa-plus, .fa-file-export, .fa-file-import, 
+        .fa-save, .fa-trash, .fa-file-download {
+            color: #FFFFFF;
+        }
+        
+        .mobile-delete-btn .fa-trash {
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <button id="menuToggle" class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>メモ帳</h1>
+                <div class="sidebar-actions">
+                    <button id="createThreadBtn" class="create-btn">
+                        <i class="fas fa-plus"></i> 新規作成
+                    </button>
+                    <div class="import-export-buttons">
+                        <button id="exportAllBtn" class="action-btn">
+                            <i class="fas fa-file-export"></i> すべてエクスポート
+                        </button>
+                        <button id="importAllBtn" class="action-btn">
+                            <i class="fas fa-file-import"></i> インポート
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="threadList" class="thread-list">
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="editor-header">
+                <input type="text" id="threadTitle" class="thread-title" placeholder="タイトルを入力">
+                <div class="editor-actions">
+                    <button id="saveBtn" class="action-btn">
+                        <i class="fas fa-save"></i>
+                    </button>
+                    <button id="mobileDeleteBtn" class="mobile-delete-btn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button id="exportTxtBtn" class="action-btn">
+                        <i class="fas fa-file-download"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="editor">
+            </div>
+        </div>
+    </div>
+
+    <div id="contextMenu" class="context-menu">
+        <button id="deleteThreadBtn" class="context-menu-item">
+            <i class="fas fa-trash"></i> 削除
+        </button>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+
+    
+    <script src="scripts/globals.js"></script>
+    <script src="scripts/notifications.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/dialogStyles.js"></script>
+    <script src="scripts/dialogHandlers.js"></script>
+    <script src="scripts/dialogHandlers/dateHandler.js"></script>
+    <script src="scripts/quillConfig.js"></script>
+    <script src="scripts/threadCreate.js"></script>
+    <script src="scripts/threadDisplay.js"></script>
+    <script src="scripts/threadDelete.js"></script>
+    <script src="scripts/threadList.js"></script>
+    <script src="scripts/threadEdit.js"></script>
+    <script src="scripts/export.js"></script>
+    <script src="scripts/import.js"></script>
+    <script src="scripts/contextMenu.js"></script>
+    <script src="scripts/init.js"></script>
+    <script src="scripts/mobileMenu.js"></script>
+</body>
+</html>

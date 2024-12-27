@@ -1,0 +1,210 @@
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+    from { 
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleOut {
+    from { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    to { 
+        transform: scale(0.95);
+        opacity: 0;
+    }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+
+@keyframes noteCreate {
+    0% {
+        transform: scale(0) rotate(-10deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    75% {
+        transform: scale(0.95) rotate(-2deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+    }
+}
+
+@keyframes noteDelete {
+    0% {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+    }
+    20% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+}
+
+@keyframes toolbarButtonHover {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes expandColorPicker {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes notification {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    10% {
+        transform: translateX(-5%);
+    }
+    15% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    85% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    90% {
+        transform: translateX(-5%);
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+}
+
+.scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.scale-out {
+    animation: scaleOut 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-out-right {
+    animation: slideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.note-create {
+    animation: noteCreate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.note-delete {
+    animation: noteDelete 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.toolbar-button-hover {
+    animation: toolbarButtonHover 0.3s ease-in-out;
+}
+
+.expand-color-picker {
+    animation: expandColorPicker 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.notification {
+    animation: notification 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ホバーエフェクト */
+.hover-scale {
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.hover-lift {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ql-toolbar button {
+    transition: all 0.2s ease-out;
+}
+
+.ql-toolbar button:hover {
+    transform: translateY(-1px);
+    background-color: var(--primary-light);
+    border-radius: 4px;
+}
+
+.ql-picker-options {
+    transition: opacity 0.2s ease-out, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ql-expanded .ql-picker-options {
+    animation: expandColorPicker 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+* {
+    scroll-behavior: smooth;
+}
+
+@media (max-width: 768px) {
+    .note-create, .note-delete {
+        animation-duration: 0.3s;
+    }
+}

@@ -1,0 +1,17 @@
+:root {
+  --bg-color: #1A1F2C;
+  --bg-gradient: #2A2F3C;
+  --primary: #9b87f5;
+  --primary-dark: #7E69AB;
+  --text: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(26, 31, 44, 0.8);
+  --glass-border: rgba(155, 135, 245, 0.2);
+  --error: #ff4d4d;
+  --success: #4CAF50;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  --button-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --hover-scale: 1.05;
+  --active-scale: 0.95;
+}

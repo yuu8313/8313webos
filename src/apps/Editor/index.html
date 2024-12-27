@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313エディタ</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/toolbar.css">
+    <link rel="stylesheet" href="css/tabs.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-error_marker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-autocomplete.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-beautify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-tern.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-emmet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-html.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-css.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-typescript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-python.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-searchbox.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-themelist.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-settings_menu.js"></script>
+
+
+
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+    
+    <div class="editor-container">
+        <div class="toolbar glass">
+            <div class="file-operations">
+                <button class="tool-btn" id="newFile" title="ファイルリセット">
+                    <i class="fas fa-file"></i>
+                </button>
+                <button class="tool-btn" id="openFile" title="ファイルを開く">
+                    <i class="fas fa-folder-open"></i>
+                </button>
+                <button class="tool-btn" id="saveFile" title="保存">
+                    <i class="fas fa-save"></i>
+                </button>
+            </div>
+            <div class="edit-operations">
+                <button class="tool-btn" id="undo" title="元に戻す">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="tool-btn" id="redo" title="やり直し">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button class="tool-btn" id="search" title="検索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="tool-btn" id="beautify" title="コード整形">
+                    <i class="fas fa-magic"></i>
+                </button>
+
+            </div>
+            <p>言語変更</p>
+            <select id="languageSelect" class="language-select glass">
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+                <option value="jsx">JSX</option>
+                <option value="tsx">TSX</option>
+                <option value="python">Python</option>
+                <option value="json">JSON</option>
+            </select>
+            <p>テーマ変更</p>
+            <select id="themeSelect" class="language-select glass">
+                <option value="monokai">Monokai</option>
+            </select>
+
+        </div>
+
+        
+
+
+        <div class="tabs glass" id="tabs">
+            <div class="tab-list" id="tabList"></div>
+            <button class="add-tab" id="addTab">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <div id="editor" class="ace-editor"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="tab.js"></script>
+</body>
+</html>

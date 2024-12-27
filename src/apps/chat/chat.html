@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mac風チャットメモ</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <button class="new-thread-btn" id="newThreadBtn">+ 新規スレッド</button>
+        <div class="thread-list" id="threadList"></div>
+    </div>
+    <div class="main-content">
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="input-container">
+                <textarea class="message-input" id="messageInput" placeholder="メッセージを入力..." rows="3"></textarea>
+                <button class="send-btn" id="sendBtn">送信</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="newThreadModal">
+        <div class="modal-content">
+            <h3>新規スレッド作成</h3>
+            <input type="text" id="threadNameInput" placeholder="スレッド名を入力">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="cancelBtn">キャンセル</button>
+                <button class="modal-btn create" id="createBtn">作成</button>
+            </div>
+        </div>
+    </div>
+    <script src="botan.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

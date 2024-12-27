@@ -1,0 +1,34 @@
+@import './variables.css';
+
+.notification {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--accent);
+  color: var(--text-primary);
+  border-radius: 8px;
+  transform: translateX(150%);
+  transition: transform var(--transition-normal);
+  z-index: var(--z-notification);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background: #4CAF50;
+}
+
+.notification.error {
+  background: #f44336;
+}
+
+.notification.warning {
+  background: #ff9800;
+}

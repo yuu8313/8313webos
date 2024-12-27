@@ -1,0 +1,88 @@
+@import './variables.css';
+
+.tabs {
+  display: flex;
+  padding: var(--spacing-xs);
+  gap: var(--spacing-xs);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.tab-list {
+  display: flex;
+  gap: var(--spacing-xs);
+  overflow-x: auto;
+  flex-grow: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg-secondary);
+}
+
+.tab-list::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tab-list::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.tab-list::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.tab {
+  background: var(--bg-secondary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: 1px solid transparent;
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.tab:hover {
+  background: var(--glass-hover);
+  border-color: var(--glass-border);
+}
+
+.tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.tab-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.tab-close:hover {
+  color: var(--text-primary);
+  background: var(--glass-hover);
+}
+
+.add-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all var(--transition-normal);
+}
+
+.add-tab:hover {
+  background: var(--glass-bg);
+  transform: scale(1.1);
+}

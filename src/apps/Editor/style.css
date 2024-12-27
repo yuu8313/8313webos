@@ -1,0 +1,163 @@
+:root {
+    --bg-primary: #1A1F2C;
+    --bg-secondary: #222733;
+    --accent: #9b87f5;
+    --text-primary: #E5DEFF;
+    --text-secondary: #8E9196;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+
+.language-select option {
+    background-color: #252A36; 
+    color: #ffffff; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+}
+
+.editor-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    padding: 10px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.tool-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.tool-btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+}
+
+.language-select {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tabs {
+    display: flex;
+    padding: 5px;
+    gap: 5px;
+}
+
+.tab-list {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    flex-grow: 1;
+}
+
+.tab {
+    background: var(--bg-secondary);
+    padding: 8px 15px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    background: var(--accent);
+}
+
+.tab-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+.tab-close:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.add-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.add-tab:hover {
+    background: var(--glass-bg);
+}
+
+.ace-editor {
+    flex-grow: 1;
+    font-size: 14px;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: var(--accent);
+    color: var(--text-primary);
+    border-radius: 8px;
+    transform: translateX(150%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+    .toolbar {
+        flex-wrap: wrap;
+    }
+    
+    .tool-btn {
+        padding: 6px;
+    }
+}
+   .ace_print-margin {
+       display: none !important;
+   }
