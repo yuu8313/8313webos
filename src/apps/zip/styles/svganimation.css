@@ -1,0 +1,271 @@
+@keyframes cloudUpload {
+    0% { 
+        transform-origin: center;
+        transform: translateY(0) scale(1) rotate(0); 
+        opacity: 1;
+        filter: brightness(1) blur(0);
+    }
+    25% { 
+        transform-origin: center;
+        transform: translateY(-30px) scale(1.2) rotate(15deg); 
+        opacity: 0.9;
+        filter: brightness(1.3) blur(0.5px);
+    }
+    50% { 
+        transform-origin: center;
+        transform: translateY(-60px) scale(1.4) rotate(-15deg); 
+        opacity: 0.7;
+        filter: brightness(1.6) blur(1px) hue-rotate(15deg);
+    }
+    75% { 
+        transform-origin: center;
+        transform: translateY(-90px) scale(1.2) rotate(15deg); 
+        opacity: 0.5;
+        filter: brightness(1.3) blur(2px) hue-rotate(-15deg);
+    }
+    100% { 
+        transform-origin: center;
+        transform: translateY(-120px) scale(1) rotate(0); 
+        opacity: 0;
+        filter: brightness(1) blur(3px);
+    }
+}
+
+@keyframes compressEffect {
+    0% { 
+        transform-origin: center;
+        transform: scale(1) rotate(0); 
+        filter: brightness(1) contrast(1);
+    }
+    20% { 
+        transform-origin: center;
+        transform: scale(0.8) rotate(72deg); 
+        filter: brightness(1.2) contrast(1.1) saturate(1.2);
+    }
+    40% { 
+        transform-origin: center;
+        transform: scale(0.6) rotate(144deg); 
+        filter: brightness(1.4) contrast(1.2) saturate(1.4) hue-rotate(10deg);
+    }
+    60% { 
+        transform-origin: center;
+        transform: scale(0.7) rotate(216deg); 
+        filter: brightness(1.6) contrast(1.3) saturate(1.6) hue-rotate(-10deg);
+    }
+    80% { 
+        transform-origin: center;
+        transform: scale(0.9) rotate(288deg); 
+        filter: brightness(1.4) contrast(1.2) saturate(1.4);
+    }
+    100% { 
+        transform-origin: center;
+        transform: scale(1) rotate(360deg); 
+        filter: brightness(1) contrast(1) saturate(1);
+    }
+}
+
+@keyframes resetSpin {
+    0% { 
+        transform-origin: center;
+        transform: rotate(0) scale(1) perspective(500px) rotateX(0); 
+        filter: brightness(1);
+    }
+    25% { 
+        transform-origin: center;
+        transform: rotate(90deg) scale(1.1) perspective(500px) rotateX(45deg); 
+        filter: brightness(1.3) saturate(1.2);
+    }
+    50% { 
+        transform-origin: center;
+        transform: rotate(180deg) scale(1.2) perspective(500px) rotateX(0); 
+        filter: brightness(1.6) saturate(1.4) hue-rotate(15deg);
+    }
+    75% { 
+        transform-origin: center;
+        transform: rotate(270deg) scale(1.1) perspective(500px) rotateX(-45deg); 
+        filter: brightness(1.3) saturate(1.2);
+    }
+    100% { 
+        transform-origin: center;
+        transform: rotate(360deg) scale(1) perspective(500px) rotateX(0); 
+        filter: brightness(1);
+    }
+}
+
+@keyframes folderBounce {
+    0% { 
+        transform-origin: center;
+        transform: translateY(0) scale(1) perspective(1000px) rotateY(0); 
+        filter: brightness(1) saturate(1);
+    }
+    20% { 
+        transform-origin: center;
+        transform: translateY(-20px) scale(1.1) perspective(1000px) rotateY(45deg); 
+        filter: brightness(1.3) saturate(1.2);
+    }
+    40% { 
+        transform-origin: center;
+        transform: translateY(-30px) scale(1.2) perspective(1000px) rotateY(-45deg); 
+        filter: brightness(1.6) saturate(1.4) hue-rotate(10deg);
+    }
+    60% { 
+        transform-origin: center;
+        transform: translateY(-20px) scale(1.15) perspective(1000px) rotateY(45deg); 
+        filter: brightness(1.4) saturate(1.3) hue-rotate(-10deg);
+    }
+    80% { 
+        transform-origin: center;
+        transform: translateY(-10px) scale(1.1) perspective(1000px) rotateY(-45deg); 
+        filter: brightness(1.2) saturate(1.1);
+    }
+    100% { 
+        transform-origin: center;
+        transform: translateY(0) scale(1) perspective(1000px) rotateY(0); 
+        filter: brightness(1) saturate(1);
+    }
+}
+
+@keyframes fileFloat {
+    0% { 
+        transform-origin: center;
+        transform: translateY(0) rotate(0) scale(1) perspective(800px); 
+        filter: brightness(1) blur(0);
+    }
+    20% { 
+        transform-origin: center;
+        transform: translateY(-15px) rotate(10deg) scale(1.1) perspective(800px) rotateX(20deg); 
+        filter: brightness(1.2) blur(0.5px) contrast(1.1);
+    }
+    40% { 
+        transform-origin: center;
+        transform: translateY(-25px) rotate(-10deg) scale(1.2) perspective(800px) rotateX(-20deg); 
+        filter: brightness(1.4) blur(1px) contrast(1.2) hue-rotate(10deg);
+    }
+    60% { 
+        transform-origin: center;
+        transform: translateY(-20px) rotate(5deg) scale(1.15) perspective(800px) rotateX(20deg); 
+        filter: brightness(1.3) blur(0.8px) contrast(1.15) hue-rotate(-10deg);
+    }
+    80% { 
+        transform-origin: center;
+        transform: translateY(-10px) rotate(-5deg) scale(1.1) perspective(800px) rotateX(-20deg); 
+        filter: brightness(1.2) blur(0.5px) contrast(1.1);
+    }
+    100% { 
+        transform-origin: center;
+        transform: translateY(0) rotate(0) scale(1) perspective(800px); 
+        filter: brightness(1) blur(0) contrast(1);
+    }
+}
+
+@keyframes downloadPulse {
+    0% { 
+        transform-origin: center;
+        transform: translateY(0) scale(1) perspective(600px) rotateX(0); 
+        filter: brightness(1) saturate(1) blur(0);
+        box-shadow: 0 0 0 rgba(111, 66, 193, 0);
+    }
+    20% { 
+        transform-origin: center;
+        transform: translateY(10px) scale(1.1) perspective(600px) rotateX(-20deg); 
+        filter: brightness(1.3) saturate(1.2) blur(0.5px);
+        box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+    }
+    40% { 
+        transform-origin: center;
+        transform: translateY(20px) scale(1.2) perspective(600px) rotateX(20deg); 
+        filter: brightness(1.6) saturate(1.4) blur(1px) hue-rotate(15deg);
+        box-shadow: 0 10px 25px rgba(111, 66, 193, 0.6);
+    }
+    60% { 
+        transform-origin: center;
+        transform: translateY(15px) scale(1.15) perspective(600px) rotateX(-20deg); 
+        filter: brightness(1.4) saturate(1.3) blur(0.8px) hue-rotate(-15deg);
+        box-shadow: 0 8px 20px rgba(111, 66, 193, 0.5);
+    }
+    80% { 
+        transform-origin: center;
+        transform: translateY(5px) scale(1.1) perspective(600px) rotateX(20deg); 
+        filter: brightness(1.2) saturate(1.1) blur(0.5px);
+        box-shadow: 0 3px 10px rgba(111, 66, 193, 0.2);
+    }
+    100% { 
+        transform-origin: center;
+        transform: translateY(0) scale(1) perspective(600px) rotateX(0); 
+        filter: brightness(1) saturate(1) blur(0);
+        box-shadow: 0 0 0 rgba(111, 66, 193, 0);
+    }
+}
+
+.fa-cloud-upload-alt {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.fa-cloud-upload-alt:hover {
+    animation: cloudUpload 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 0 12px rgba(0, 123, 255, 0.9));
+}
+
+.fa-compress-arrows-alt {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.fa-compress-arrows-alt:hover {
+    animation: compressEffect 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 0 12px rgba(255, 193, 7, 0.9));
+}
+
+.fa-redo {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.fa-redo:hover {
+    animation: resetSpin 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 0 12px rgba(40, 167, 69, 0.9));
+}
+
+.fa-folder {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.fa-folder:hover {
+    animation: folderBounce 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 0 12px rgba(255, 152, 0, 0.9));
+}
+
+.fa-file {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.fa-file:hover {
+    animation: fileFloat 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 0 12px rgba(23, 162, 184, 0.9));
+}
+
+.fa-download {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.fa-download:hover {
+    animation: downloadPulse 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 0 12px rgba(111, 66, 193, 0.9));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fa-cloud-upload-alt,
+    .fa-compress-arrows-alt,
+    .fa-redo,
+    .fa-folder,
+    .fa-file,
+    .fa-download {
+        animation: none !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}

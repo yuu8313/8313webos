@@ -1,0 +1,30 @@
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .drop-zone {
+        padding: 20px;
+    }
+
+    .drop-zone i {
+        font-size: 36px;
+    }
+
+    .file-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .file-item i {
+        margin: 0 0 10px 0;
+    }
+
+    .file-item button {
+        margin-top: 10px;
+    }
+}

@@ -1,0 +1,297 @@
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --accent-color: #8b5cf6;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+}
+
+.drop-zone {
+    text-align: center;
+    padding: 40px;
+    margin: 20px 0;
+    border-radius: 15px;
+    border: 2px dashed var(--glass-border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.drop-zone:hover {
+    border-color: var(--accent-color);
+}
+
+.drop-zone i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: var(--accent-color);
+}
+
+.file-list {
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    position: relative;
+}
+
+.compress-all-button {
+    position: relative;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.compress-all-button:hover {
+    background: #7c4dff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+}
+
+.compress-all-button i {
+    color: white;
+}
+
+.file-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    background: var(--glass-bg);
+    transition: all 0.3s ease;
+}
+
+.folder-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    background: var(--glass-bg);
+    transition: all 0.3s ease;
+}
+
+.file-item:hover, .folder-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.folder-item {
+    cursor: pointer;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.folder-item > i, .folder-item > span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.folder-item > i {
+    margin-right: 15px;
+    font-size: 24px;
+    color: var(--accent-color);
+}
+
+.folder-files {
+    width: 100%;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.file-item i {
+    margin-right: 15px;
+    font-size: 24px;
+    color: var(--accent-color);
+}
+
+.file-item .file-name, .folder-item .folder-name {
+    flex-grow: 1;
+}
+
+.action-button, .compress-button {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.action-button i, .compress-button i {
+    color: white;
+}
+
+.action-button:hover, .compress-button:hover {
+    background: #7c4dff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.folder-structure {
+    margin-top: 10px;
+    margin-left: 20px;
+    border-left: 2px solid var(--accent-color);
+    padding-left: 15px;
+}
+
+.extracted-folder {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.folder-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.folder-header:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.folder-header i {
+    color: var(--accent-color);
+}
+
+.folder-files {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.extracted-file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    background: var(--glass-bg);
+    transition: background-color 0.2s;
+}
+
+.extracted-file:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.action-button {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    margin-left: auto;
+}
+
+.action-button i {
+    color: white;
+}
+
+.action-button:hover {
+    background: #7c4dff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.reset-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px auto;
+    padding: 12px 24px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.reset-button:hover {
+    background: #7c4dff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+}
+
+.reset-button i {
+    color: white;
+}
+
+
+.compression-settings {
+    text-align: center;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 15px;
+}
+
+.compression-level-select {
+    background: var(--glass-bg);
+    color: var(--text-color);
+    border: 1px solid var(--glass-border);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.compression-level-select:hover {
+    border-color: var(--accent-color);
+}
+
+.compression-level-select option {
+    background: #2d2d2d;
+    color: var(--text-color);
+}

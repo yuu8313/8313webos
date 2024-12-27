@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313ZIP圧縮＆解凍ツール</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="styles/glassmorphism.css">
+    <link rel="stylesheet" href="styles/notifications.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header glass-effect">
+            <h1>ZIP圧縮＆解凍ツール</h1>
+        </div>
+        
+        <div class="compression-settings glass-effect">
+            <label for="compressionLevel">圧縮レベル:</label>
+            <select id="compressionLevel" class="compression-level-select">
+                <option value="0">0 (無圧縮)</option>
+                <option value="1">1 (最低圧縮)</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8" selected>8 (推奨)</option>
+                <option value="9">9 (最高圧縮)</option>
+            </select>
+        </div>
+
+        <div class="drop-zone glass-effect" id="dropZone">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>ファイルまたはフォルダーをドラッグ＆ドロップ<br>または<br>クリックしてファイルを選択</p>
+            <input type="file" id="fileInput" multiple webkitdirectory directory hidden>
+            <input type="file" id="singleFileInput" multiple hidden>
+        </div>
+
+        <button id="resetButton" class="reset-button glass-effect">
+            <i class="fas fa-redo"></i> リセット
+        </button>
+
+        <div class="file-list glass-effect" id="fileList">
+            <button id="compressAllButton" class="compress-all-button">
+                <i class="fas fa-compress-arrows-alt"></i> すべて圧縮
+            </button>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="js/fileHandler.js"></script>
+    <script src="js/zipHandler.js"></script>
+    <script src="js/uiHandler.js"></script>
+</body>
+</html>
