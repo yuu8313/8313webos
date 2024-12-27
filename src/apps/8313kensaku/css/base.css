@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+    --primary-color: #00a8ff;
+    --secondary-color: #192a56;
+    --background-color: #0c1633;
+    --text-color: #ffffff;
+    --accent-color: #44bd32;
+    --dropdown-bg: #1e3a8a;
+    --dropdown-text: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}

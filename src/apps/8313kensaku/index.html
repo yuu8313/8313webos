@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8313複合検索エンジン</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    <link rel="stylesheet" href="css/tauanimation.css">
+    <meta name="description" content="8313複合検索エンジン" />
+    <meta name="author" content="8313" />
+    <link rel="icon" href="https://github.com/yuu8313/hukugoukensakuenzin/blob/main/ICON.png?raw=true" type="image/png">
+  </head>
+
+  <body>
+    <div class="container">
+      <h1><i class="fas fa-search-plus"></i> 8313複合検索エンジン</h1>
+      <div class="search-tabs">
+        <button class="tab-button active" data-tab="search-engines"><i class="fas fa-search"></i> 検索エンジン</button>
+        <button class="tab-button" data-tab="image"><i class="fas fa-image"></i> 画像</button>
+        <button class="tab-button" data-tab="music"><i class="fas fa-music"></i> 音楽</button>
+        <button class="tab-button" data-tab="shopping"><i class="fas fa-shopping-cart"></i> ショッピング</button>
+        <button class="tab-button" data-tab="sns"><i class="fas fa-share-alt"></i> SNS</button>
+        <button class="tab-button" data-tab="video"><i class="fas fa-video"></i> 動画</button>
+        <button class="tab-button" data-tab="discussion"><i class="fas fa-comments"></i> ディスカッション</button>
+        <button class="tab-button" data-tab="dictionary"><i class="fas fa-book"></i> 辞書</button>
+        <button class="tab-button" data-tab="academic"><i class="fas fa-graduation-cap"></i> 論文</button>
+        <button class="tab-button" data-tab="travel"><i class="fas fa-language"></i> 翻訳</button>
+        <button class="tab-button" data-tab="ai"><i class="fas fa-robot"></i> AI</button>
+      </div>
+
+      <div class="search-content">
+        <div class="tab-content active" id="search-engines">
+          <select id="search-engine-select">
+            <option value="google"><i class="fab fa-google"></i> Google</option>
+            <option value="bing">Bing</option>
+            <option value="yahoo">Yahoo!Japan</option>
+            <option value="duckduckgo">DuckDuckGo</option>
+            <option value="brave">Brave Search</option>
+            <option value="excite">Excite</option>
+          </select>
+
+          <div class="advanced-search">
+            <h3><i class="fas fa-sliders-h"></i> 高度な検索オプション</h3>
+            <div class="search-option">
+              <input type="checkbox" id="exact-match">
+              <label for="exact-match"><i class="fas fa-equals"></i> 完全一致検索</label>
+              <input type="text" id="exact-match-input" placeholder='キーワードを入力'>
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="exclude">
+              <label for="exclude"><i class="fas fa-ban"></i> 除外検索</label>
+              <input type="text" id="exclude-input" placeholder='除外するキーワードを入力'>
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="or-search">
+              <label for="or-search"><i class="fas fa-random"></i> OR検索</label>
+              <input type="text" id="or-search-input" placeholder='OR検索キーワードを入力'>
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="wildcard">
+              <label for="wildcard"><i class="fas fa-wrench"></i> ワイルドカード検索</label>
+              <input type="text" id="wildcard-input" placeholder='ワイルドカード(*)を含むキーワードを入力'>
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="synonym">
+              <label for="synonym"><i class="fas fa-simplybuilt"></i> 類義語検索</label>
+              <input type="text" id="synonym-input" placeholder='類義語を検索するキーワードを入力'>
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="date-range">
+              <label for="date-range"><i class="fas fa-calendar-alt"></i> 日付指定検索</label>
+              <input type="date" id="date-start">
+              <input type="date" id="date-end">
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="field-search">
+              <label for="field-search"><i class="fas fa-search"></i> フィールド検索</label>
+              <select id="field-select">
+                <option value="title">タイトル</option>
+                <option value="url">URL</option>
+                <option value="body">本文</option>
+              </select>
+              <input type="text" id="field-search-input" placeholder='フィールド検索キーワードを入力'>
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="filetype">
+              <label for="filetype"><i class="fas fa-file"></i> ファイルタイプ検索</label>
+              <select id="filetype-select">
+                <option value="pdf">PDF</option>
+                <option value="doc">Word</option>
+                <option value="xls">Excel</option>
+                <option value="ppt">PowerPoint</option>
+              </select>
+            </div>
+            <div class="search-option">
+              <input type="checkbox" id="define">
+              <label for="define"><i class="fas fa-book-open"></i> 定義検索</label>
+              <input type="text" id="define-input" placeholder='定義を検索するキーワードを入力'>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="image">
+          <select id="image-service-select">
+            <option value="googleimage">Google画像検索</option>
+            <option value="bingimage">Bing画像検索</option>
+            <option value="yahooimage">Yahoo!Japan画像検索</option>
+            <option value="duckduckgoimage">duckduckgo画像検索</option>
+            <option value="braveimage">Brave Search画像検索</option>
+            <option value="exciteimag">Excite画像検索</option>
+          </select>
+        </div>
+        <div class="tab-content" id="music">
+          <select id="music-service-select">
+            <option value="spotify">Spotify</option>
+            <option value="apple-music">Apple Music</option>
+            <option value="amazon-music">Amazon Music</option>
+          </select>
+        </div>
+        <div class="tab-content" id="shopping">
+          <select id="shopping-service-select">
+            <option value="amazon">Amazon</option>
+            <option value="yahoo-shopping">Yahoo!ショッピング</option>
+            <option value="rakuten">楽天市場</option>
+            <option value="mercari">メルカリ</option>
+            <option value="dmm">DMM</option>
+            <option value="alibaba">アリババ(中国のアマゾン)</option>
+          </select>
+        </div>
+        <div class="tab-content" id="sns">
+          <select id="sns-service-select">
+            <option value="twitter">Twitter (X)</option>
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="bluesky">Bluesky</option>
+            <option value="threads">Threads</option>
+            <option value="linkedin">LinkedIn</option>
+          </select>
+        </div>
+
+        <div class="tab-content" id="video">
+          <select id="video-service-select">
+            <option value="niconico">ニコニコ動画</option>
+            <option value="youtube">YouTube</option>
+            <option value="dailymotion">Dailymotion</option>
+            <option value="bilibili">bilibili（中国のニコニコのような動画サイト）</option>
+            <option value="tiktok">Tiktok</option>
+          </select>
+        </div>
+    
+        <div class="tab-content" id="discussion">
+          <select id="discussion-service-select">
+            <option value="reddit">Reddit</option>
+            <option value="quora">Quora (JP)</option>
+          </select>
+        </div>
+    
+        <div class="tab-content" id="dictionary">
+          <select id="dictionary-service-select">
+            <option value="niconico-dic">ニコニコ大百科</option>
+            <option value="goo-dic">goo辞書</option>
+            <option value="wikipedia">Wikipedia</option>
+            <option value="pixiv-dic">ピクシブ百科事典</option>
+            <option value="weblio">Weblio英和・和英辞書</option>
+            <option value="kotobank">コトバンク</option>
+            <option value="wiktionary">ウィクショナリー辞書</option>
+          </select>
+        </div>
+        <div class="tab-content" id="academic">
+          <select id="academic-service-select">
+            <option value="google-scholar">Google Scholar</option>
+          </select>
+        </div>
+        <div class="tab-content" id="travel">
+          <select id="travel-service-select">
+            <option value="google-Translation?-JA">Google 翻訳(言語を検出→日)</option>
+            <option value="google-Translation?-EN">Google 翻訳(言語を検出→英)</option>
+            <option value="google-Translation?-DE">Google 翻訳(言語を検出→独)</option>
+            <option value="google-Translation?-FR">Google 翻訳(言語を検出→仏)</option>
+            <option value="google-Translation?-KR">Google 翻訳(言語を検出→韓)</option>
+            <option value="google-Translation?-zh-CN">Google 翻訳(言語を検出→中簡体)</option>
+            <option value="google-Translation?-zh-TW">Google 翻訳(言語を検出→中TW)</option>
+          </select>
+        </div>
+
+        <div class="tab-content" id="ai">
+          <select id="ai-service-select">
+            <option value="chatgpt">ChatGPT</option>
+            <option value="perplexity">Perplexity</option>
+            <option value="genspark">Genspark（Perplexityよりい詳しく調べる）</option>
+            <option value="felo">Felo（日本版Perplexity）</option>
+            <option value="wolframalpha">wolframalpha(計算AI)</option>
+          </select>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="検索キーワードを入力">
+        <button id="search-button"><i class="fas fa-search"></i> 検索</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
