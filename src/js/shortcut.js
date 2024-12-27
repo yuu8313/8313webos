@@ -200,3 +200,4 @@ class ShortcutManager {
 
 // グローバルなショートカットマネージャーのインスタンスを作成
 const shortcutManager = new ShortcutManager();
+

@@ -1,65 +1,64 @@
-// system.js - システム全体の管理を担当
-
-
+/**
+ * system.js - システム全体の管理を担当
+ */
 class SystemManager {
     constructor() {
         this.initializeSystem();
     }
 
-    // システムの初期化
     initializeSystem() {
         this.setupEventListeners();
         this.setupContextMenu();
         this.setupDragAndDrop();
+        console.log('System initialized');
     }
 
-    // イベントリスナーの設定
     setupEventListeners() {
-        // ウィンドウのリサイズイベント
         window.addEventListener('resize', () => {
             this.handleSystemResize();
         });
 
-        // キーボードイベント
         document.addEventListener('keydown', (e) => {
             this.handleKeyboardShortcuts(e);
         });
+
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (shortcutManager.draggedShortcut) {
+                const icon = document.getElementById(shortcutManager.draggedShortcut.id);
+                if (icon) {
+                    icon.style.left = `${e.clientX}px`;
+                    icon.style.top = `${e.clientY}px`;
+                    shortcutManager.updateShortcutPosition(shortcutManager.draggedShortcut, e.clientX, e.clientY);
+                }
+            }
+        });
     }
 
-    // システムのリサイズ処理
     handleSystemResize() {
-        // デスクトップのグリッドを更新
         this.updateDesktopGrid();
-        
-        // 最大化されているウィンドウを調整
         windowManager.handleWindowResize();
     }
 
-    // デスクトップグリッドの更新
     updateDesktopGrid() {
         const desktop = document.getElementById('desktop');
-        const iconSize = 100; // アイコンのサイズ + マージン
+        const iconSize = 100;
         const columns = Math.floor(desktop.clientWidth / iconSize);
-        
         desktop.style.gridTemplateColumns = `repeat(${columns}, ${iconSize}px)`;
     }
 
-    // キーボードショートカットの処理
     handleKeyboardShortcuts(e) {
-        // Alt + Tab でウィンドウ切り替え
         if (e.altKey && e.key === 'Tab') {
             e.preventDefault();
             this.switchToNextWindow();
         }
 
-        // Windows + D でデスクトップ表示
         if (e.metaKey && e.key === 'd') {
             e.preventDefault();
             this.toggleShowDesktop();
         }
     }
 
-    // 次のウィンドウに切り替え
     switchToNextWindow() {
         const windows = Array.from(windowManager.windows.values())
             .filter(w => w.style.display !== 'none');
@@ -72,145 +71,46 @@ class SystemManager {
         windowManager.setActiveWindow(windows[nextIndex]);
     }
 
-    // デスクトップ表示の切り替え
     toggleShowDesktop() {
         const windows = Array.from(windowManager.windows.values());
         const allMinimized = windows.every(w => w.style.display === 'none');
 
         if (allMinimized) {
-            // すべてのウィンドウを復元
             windows.forEach(w => {
                 w.style.display = 'block';
-                const windowId = w.id;
-                taskbarManager.activateTaskbarItem(windowId);
+                taskbarManager.activateTaskbarItem(w.id);
             });
         } else {
-            // すべてのウィンドウを最小化
             windows.forEach(w => {
                 windowManager.minimizeWindow(w.id);
             });
         }
     }
 
-    // コンテキストメニューの設定
     setupContextMenu() {
         const desktop = document.getElementById('desktop');
         
         desktop.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            this.showContextMenu(e.clientX, e.clientY);
-        });
-    }
-
-        // コンテキストメニューの表示
-    showContextMenu(x, y) {
-        const existingMenu = document.querySelector('.context-menu');
-        if (existingMenu) {
-            existingMenu.remove();
-        }
-
-        const menu = document.createElement('div');
-        menu.className = 'context-menu';
-        menu.style.left = `${x}px`;
-        menu.style.top = `${y}px`;
-
-        const menuItems = [
-            { 
-                label: '複合検索を開く', 
-                icon: '🔍',
-                action: () => {
-                    const notepadApp = applicationManager.apps.find(app => app.id === 'kensaku');
-                    if (notepadApp) applicationManager.launchApplication(notepadApp);
-                }
-            },
-            { 
-                label: '電卓を開く', 
-                icon: '🔢',
-                action: () => {
-                    const calcApp = applicationManager.apps.find(app => app.id === 'dentaku');
-                    if (calcApp) applicationManager.launchApplication(calcApp);
-                }
-            },
-            { 
-                label: 'メモを開く', 
-                icon: '📝',
-                action: () => {
-                    const calendarApp = applicationManager.apps.find(app => app.id === 'memotyou');
-                    if (calendarApp) applicationManager.launchApplication(calendarApp);
-                }
-            },
-            { 
-                label: 'テキストエディタを開く', 
-                icon: '<>',
-                action: () => {
-                    const calendarApp = applicationManager.apps.find(app => app.id === 'txtEditor');
-                    if (calendarApp) applicationManager.launchApplication(calendarApp);
-                }
-            },
-            { 
-                label: 'ブックマーク保存を開く', 
-                icon: '📑',
-                action: () => {
-                    const calendarApp = applicationManager.apps.find(app => app.id === 'bookmark');
-                    if (calendarApp) applicationManager.launchApplication(calendarApp);
-                }
-            },
-            { 
-                label: 'privacyOSを開く', 
-                icon: '🤫',
-                action: () => {
-                    const calendarApp = applicationManager.apps.find(app => app.id === 'privacyOS');
-                    if (calendarApp) applicationManager.launchApplication(calendarApp);
-                }
-            },
-            { type: 'separator' },
-            { 
-                label: '更新', 
-                icon: '🔄',
-                action: () => {
-                    window.location.reload();
-                }
-            },
-
-        ];
-
-        menuItems.forEach(item => {
-            if (item.type === 'separator') {
-                const separator = document.createElement('div');
-                separator.className = 'context-menu-separator';
-                menu.appendChild(separator);
+            
+            if (e.target.closest('.desktop-icon.shortcut')) {
                 return;
             }
-
-            const menuItem = document.createElement('div');
-            menuItem.className = 'context-menu-item';
-            menuItem.innerHTML = `
-                <span class="icon">${item.icon}</span>
-                <span class="label">${item.label}</span>
-            `;
-
-            menuItem.addEventListener('click', () => {
-                item.action();
-                menu.remove();
-            });
-
-            menu.appendChild(menuItem);
-        });
-
-        document.body.appendChild(menu);
-
-        // メニュー以外をクリックしたら閉じる
-        const closeMenu = (e) => {
-            if (!menu.contains(e.target)) {
-                menu.remove();
-                document.removeEventListener('click', closeMenu);
+            
+            const appIcon = e.target.closest('.desktop-icon[data-app-name]');
+            if (appIcon) {
+                const appName = appIcon.dataset.appName;
+                const appData = appLoader.installedApps.get(appName);
+                if (appData) {
+                    contextMenuManager.showAppContextMenu(e.clientX, e.clientY, appData);
+                    return;
+                }
             }
-        };
-
-        document.addEventListener('click', closeMenu);
+            
+            contextMenuManager.showDefaultContextMenu(e.clientX, e.clientY);
+        });
     }
 
-    // ドラッグ＆ドロップの設定
     setupDragAndDrop() {
         const desktop = document.getElementById('desktop');
         
@@ -219,12 +119,19 @@ class SystemManager {
             e.dataTransfer.dropEffect = 'move';
         });
 
-        desktop.addEventListener('drop', (e) => {
+        desktop.addEventListener('drop', async (e) => {
             e.preventDefault();
-            // ファイルのドロップ処理を実装可能
+            const files = Array.from(e.dataTransfer.files);
+            for (const file of files) {
+                if (file.name.endsWith('.8313osapp')) {
+                    const appData = await appInstaller.installApp(file);
+                    if (appData) {
+                        appLoader.registerApp(appData);
+                    }
+                }
+            }
         });
     }
 }
 
-// グローバルなシステムマネージャーのインスタンスを作成
 const systemManager = new SystemManager();
