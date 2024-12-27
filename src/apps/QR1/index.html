@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313QRコード生成器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="notification" id="notification">
+        <span class="notification-text"></span>
+    </div>
+
+    <div class="container">
+        <section class="generator-section" id="generatorSection">
+            <h1>8313QRコード生成器</h1>
+            <div class="glass-card">
+                <div class="input-group">
+                    <label for="text"><i class="fas fa-font"></i> テキストまたはURL</label>
+                    <input type="text" id="text" placeholder="https://example.com">
+                </div>
+
+                <div class="options-grid">
+                    <div class="input-group">
+                        <label for="size"><i class="fas fa-ruler"></i> サイズ</label>
+                        <input type="range" id="size" min="100" max="400" value="200">
+                        <span class="size-value">200 x 200</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="errorLevel"><i class="fas fa-shield"></i> エラー訂正レベル</label>
+                        <select id="errorLevel">
+                            <option value="L">低 (7%)</option>
+                            <option value="M" selected>中 (15%)</option>
+                            <option value="Q">高 (25%)</option>
+                            <option value="H">最高 (30%)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="foreground"><i class="fas fa-palette"></i> QRコードの色</label>
+                        <input type="color" id="foreground" value="#000000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="background"><i class="fas fa-fill-drip"></i> 背景色</label>
+                        <input type="color" id="background" value="#ffffff">
+                    </div>
+                </div>
+
+                <button id="generate" class="generate-btn">
+                    <i class="fas fa-bolt"></i> QRコードを生成
+                </button>
+            </div>
+        </section>
+
+        <section class="result-section" id="resultSection">
+            <div class="glass-card result-card">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <span>生成中...</span>
+                </div>
+                <div id="qrcode"></div>
+                <button id="download" class="download-btn">
+                    <i class="fas fa-save"></i> ダウンロード
+                </button>
+                <button id="regenerate" class="regenerate-btn">
+                    <i class="fas fa-redo"></i> 新しいQRコードを作成
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

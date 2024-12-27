@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8313動画player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link rel="icon" href="https://github.com/yuu8313/hukugoukensakuenzin/blob/main/ICON.png?raw=true" type="image/png">
+    <style>
+        :root {
+    --primary-color: #7C3AED;
+    --background-color: #1A1A1A;
+    --text-color: #FFFFFF;
+    --control-bg: rgba(0, 0, 0, 0.7);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.drop-zone {
+    border: 3px dashed rgba(124, 58, 237, 0.5);
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.drop-zone.drag-over {
+    background: rgba(124, 58, 237, 0.1);
+    border-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    transition: height 0.2s ease;
+}
+
+.progress-bar:hover {
+    height: 8px;
+}
+
+.progress {
+    width: 0;
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 6px;
+    position: relative;
+    transition: width 0.1s linear;
+}
+
+.progress::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.progress-bar:hover .progress::after {
+    opacity: 1;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: rgba(124, 58, 237, 0.9);
+    border-radius: 8px;
+    transform: translateX(150%);
+    transition: all 0.3s ease;
+    opacity: 0;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+}
+.video-container {
+    position: relative;
+    width: 100%;
+    display: none;
+    margin-top: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.video-container.theater-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    z-index: 1000;
+    background: black;
+}
+
+video {
+    width: 100%;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.play-indicator, .pause-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.play-indicator:hover, .pause-indicator:hover {
+    transform: translate(-50%, -50%) scale(1);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.play-indicator i, .pause-indicator i {
+    font-size: 28px;
+    color: white;
+}
+
+.playlist-container {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 15px;
+    display: none;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 8px;
+}
+
+.playlist-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.playlist-item.active {
+    background: rgba(124, 58, 237, 0.3);
+}
+
+.playlist-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.playlist-controls button {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+
+.playlist-controls button.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.playlist-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.playlist-toggle:hover {
+    transform: scale(1.1);
+}
+
+.playlist-toggle.visible {
+    display: flex;
+}
+
+@media (max-width: 768px) {
+    .controls {
+        padding: 15px 10px 8px;
+    }
+    
+    .buttons {
+        gap: 12px;
+    }
+
+    button {
+        padding: 6px;
+    }
+
+    .time {
+        font-size: 12px;
+    }
+}
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7) 60%, transparent);
+    padding: 20px 15px 12px;
+    border-radius: 0 0 12px 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.video-container:hover .controls {
+    opacity: 1;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 5px;
+}
+
+button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover {
+    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.time {
+    font-size: 14px;
+    margin-left: 15px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.volume-container, .speed-container {
+    position: relative;
+}
+
+.volume-slider-container, .speed-options {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--control-bg);
+    padding: 10px;
+    border-radius: 8px;
+    display: none;
+}
+
+.volume-container:hover .volume-slider-container,
+.speed-container:hover .speed-options {
+    display: block;
+}
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7) 60%, transparent);
+    padding: 20px 15px 12px;
+    border-radius: 0 0 12px 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.video-container:hover .controls {
+    opacity: 1;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 5px;
+}
+
+button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+button:hover {
+    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.tooltip2 {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip2:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 40px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1001;
+}
+
+.tooltip3 {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip3:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 130px); 
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1001;
+}
+
+.tooltip4 {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip4:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.time {
+    font-size: 14px;
+    margin-left: 15px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.volume-container, .speed-container {
+    position: relative;
+}
+
+.volume-slider-container, .speed-options {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--control-bg);
+    padding: 10px;
+    border-radius: 8px;
+    display: none;
+}
+
+.volume-container:hover .volume-slider-container,
+.speed-container:hover .speed-options {
+    display: block;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <div id="dropZone" class="drop-zone">
+            <i class="fas fa-cloud-upload-alt fa-3x" style="color: var(--primary-color); margin-bottom: 15px;"></i>
+            <p>ここに動画をドラッグ＆ドロップ</p>
+            <p>または</p>
+            <input type="file" id="fileInput" accept="video/*" multiple style="display: none;">
+            <button onclick="document.getElementById('fileInput').click()" style="color: var(--primary-color); margin-top: 10px;">
+                ファイルを選択
+            </button>
+        </div>
+        <div id="videoContainer" class="video-container">
+            <video id="video"></video>
+            <div id="playIndicator" class="play-indicator">
+                <i class="fas fa-play"></i>
+            </div>
+            <div id="pauseIndicator" class="pause-indicator">
+                <i class="fas fa-pause"></i>
+            </div>
+            <div class="controls">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="buttons">
+                    <div class="tooltip" data-tooltip="再生/一時停止">
+                        <button id="playPause"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="tooltip" data-tooltip="10秒戻る">
+                        <button id="backward"><i class="fas fa-backward"></i></button>
+                    </div>
+                    <div class="tooltip" data-tooltip="10秒進む">
+                        <button id="forward"><i class="fas fa-forward"></i></button>
+                    </div>
+                    <div class="volume-container">
+                        <div class="tooltip2" data-tooltip="音量">
+                            <button id="volume"><i class="fas fa-volume-up"></i></button>
+                        </div>
+                        <div class="volume-slider-container">
+                            <input type="range" id="volumeSlider" min="0" max="100" value="100">
+                        </div>
+                    </div>
+                    <div class="speed-container">
+                        <div class="tooltip3" data-tooltip="再生速度">
+                            <button id="speed">1x</button>
+                        </div>
+                        <div class="speed-options">
+                            <button data-speed="0.5">0.5x</button>
+                            <button data-speed="1">1x</button>
+                            <button data-speed="1.5">1.5x</button>
+                            <button data-speed="2">2x</button>
+                        </div>
+                    </div>
+                    <div class="tooltip" data-tooltip="スクリーンショット">
+                        <button id="screenshot"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <div class="tooltip" data-tooltip="ポップアップで開く">
+                        <button id="popup"><i class="fas fa-external-link-alt"></i></button>
+                    </div>
+                    <div class="tooltip" data-tooltip="シアターモード">
+                        <button id="theater"><i class="fas fa-tv"></i></button>
+                    </div>
+                    <div class="tooltip" data-tooltip="全画面表示">
+                        <button id="fullscreen"><i class="fas fa-expand"></i></button>
+                    </div>
+                    <span class="time" id="time">0:00 / 0:00</span>
+                </div>
+            </div>
+        </div>
+        <div class="playlist-container">
+            <div class="playlist-controls">
+                    <button onclick="toggleRepeat()"><i class="fas fa-repeat"></i></button>
+                    <button onclick="toggleShuffle()"><i class="fas fa-random"></i></button>
+            </div>
+            <div class="playlist-items"></div>
+        </div>
+    </div>
+    <div id="notification" class="notification"></div>
+    <div class="playlist-toggle" id="playlistToggle">
+        <i class="fas fa-plus"></i>
+    </div>
+    <script type="text/javascript">
+        const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const videoContainer = document.getElementById('videoContainer');
+const video = document.getElementById('video');
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const files = Array.from(e.dataTransfer.files);
+    
+    const videoFiles = files.filter(file => file.type.startsWith('video/'));
+    if (videoFiles.length > 0) {
+        videoFiles.forEach(file => addToPlaylist(file));
+        dropZone.style.display = 'none';
+        videoContainer.style.display = 'block';
+        showNotification(`${videoFiles.length}個の動画を読み込みました`);
+    } else {
+        showNotification('エラー: 動画ファイルを選択してください');
+    }
+});
+
+fileInput.addEventListener('change', () => {
+    const files = Array.from(fileInput.files);
+    if (files.length > 0) {
+        files.forEach(file => addToPlaylist(file));
+        dropZone.style.display = 'none';
+        videoContainer.style.display = 'block';
+        showNotification(`${files.length}個の動画を読み込みました`);
+    }
+});
+
+function handleVideo(file) {
+    const url = URL.createObjectURL(file);
+    video.src = url;
+}
+let playlist = [];
+let currentIndex = 0;
+let isRepeat = false;
+let isShuffle = false;
+let shuffledIndices = [];
+
+function addToPlaylist(file) {
+    const url = URL.createObjectURL(file);
+    playlist.push({
+        name: file.name,
+        url: url
+    });
+    
+    if (playlist.length === 1) {
+        handleVideo(file);
+    }
+    
+    updatePlaylistUI();
+    
+    if (playlist.length > 1) {
+        document.querySelector('.playlist-container').style.display = 'block';
+        document.querySelector('.playlist-controls').style.display = 'flex';
+        document.getElementById('playlistToggle').classList.add('visible');
+    }
+}
+
+function updatePlaylistUI() {
+    const container = document.querySelector('.playlist-container');
+    container.innerHTML = `
+        <div class="playlist-controls" style="display: ${playlist.length > 1 ? 'flex' : 'none'}">
+            <button onclick="toggleRepeat()" class="${isRepeat ? 'active' : ''}">
+                <i class="fas fa-repeat"></i>
+            </button>
+            <button onclick="toggleShuffle()" class="${isShuffle ? 'active' : ''}" ${playlist.length <= 1 ? 'disabled' : ''}>
+                <i class="fas fa-random"></i>
+            </button>
+        </div>
+        <div class="playlist-items">
+            ${playlist.map((item, index) => `
+                <div class="playlist-item ${index === currentIndex ? 'active' : ''}" 
+                     onclick="playFromPlaylist(${index})">
+                    <i class="fas ${index === currentIndex ? 'fa-play' : 'fa-music'}" style="margin-right: 10px;"></i>
+                    ${item.name}
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function playFromPlaylist(index) {
+    currentIndex = index;
+    video.src = playlist[index].url;
+    video.play();
+    updatePlaylistUI();
+}
+
+function playNext() {
+    if (playlist.length <= 1) return;
+    
+    if (isShuffle) {
+        if (shuffledIndices.length === 0) {
+            shuffledIndices = [...Array(playlist.length).keys()].filter(i => i !== currentIndex);
+            shuffledIndices.sort(() => Math.random() - 0.5);
+        }
+        currentIndex = shuffledIndices.pop();
+    } else {
+        currentIndex = (currentIndex + 1) % playlist.length;
+    }
+    
+    playFromPlaylist(currentIndex);
+}
+
+function playPrevious() {
+    if (playlist.length <= 1) return;
+    currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+    playFromPlaylist(currentIndex);
+}
+
+function toggleRepeat() {
+    isRepeat = !isRepeat;
+    updatePlaylistUI();
+}
+
+function toggleShuffle() {
+    if (playlist.length <= 1) return;
+    isShuffle = !isShuffle;
+    shuffledIndices = [];
+    updatePlaylistUI();
+}
+
+video.addEventListener('ended', () => {
+    if (isRepeat) {
+        video.currentTime = 0;
+        video.play();
+    } else if (playlist.length > 1) {
+        playNext();
+    }
+});
+
+document.getElementById('playlistToggle').addEventListener('click', () => {
+    const container = document.querySelector('.playlist-container');
+    if (container.style.display === 'none' || !container.style.display) {
+        container.style.display = 'block';
+    } else {
+        container.style.display = 'none';
+    }
+});
+const playPauseBtn = document.getElementById('playPause');
+const playIndicator = document.getElementById('playIndicator');
+const pauseIndicator = document.getElementById('pauseIndicator');
+
+function togglePlay() {
+    if (video.paused) {
+        video.play();
+        showPlayIndicator();
+    } else {
+        video.pause();
+        showPauseIndicator();
+    }
+}
+
+video.addEventListener('click', togglePlay);
+playPauseBtn.addEventListener('click', togglePlay);
+
+function showPlayIndicator() {
+    playIndicator.style.opacity = '1';
+    setTimeout(() => {
+        playIndicator.style.opacity = '0';
+    }, 400);
+}
+
+function showPauseIndicator() {
+    pauseIndicator.style.opacity = '1';
+    setTimeout(() => {
+        pauseIndicator.style.opacity = '0';
+    }, 400);
+}
+
+video.addEventListener('play', () => {
+    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+});
+
+video.addEventListener('pause', () => {
+    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+});
+
+document.getElementById('forward').addEventListener('click', () => {
+    video.currentTime += 10;
+});
+
+document.getElementById('backward').addEventListener('click', () => {
+    video.currentTime -= 10;
+});
+const progressBar = document.getElementById('progressBar');
+const progress = document.getElementById('progress');
+const timeDisplay = document.getElementById('time');
+
+video.addEventListener('timeupdate', () => {
+    const percent = (video.currentTime / video.duration) * 100;
+    progress.style.width = percent + '%';
+    timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+});
+
+progressBar.addEventListener('click', (e) => {
+    const rect = progressBar.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width;
+    video.currentTime = pos * video.duration;
+});
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    seconds = Math.floor(seconds % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+const volumeBtn = document.getElementById('volume');
+const volumeSlider = document.getElementById('volumeSlider');
+const speedBtn = document.getElementById('speed');
+
+volumeBtn.addEventListener('click', () => {
+    video.muted = !video.muted;
+    updateVolumeIcon();
+});
+
+volumeSlider.addEventListener('input', (e) => {
+    video.volume = e.target.value / 100;
+    updateVolumeIcon();
+});
+
+function updateVolumeIcon() {
+    const icon = volumeBtn.querySelector('i');
+    icon.className = 'fas';
+    
+    if (video.muted || video.volume === 0) {
+        icon.classList.add('fa-volume-mute');
+    } else if (video.volume < 0.5) {
+        icon.classList.add('fa-volume-down');
+    } else {
+        icon.classList.add('fa-volume-up');
+    }
+}
+
+document.querySelectorAll('.speed-options button').forEach(button => {
+    button.addEventListener('click', () => {
+        const speed = parseFloat(button.dataset.speed);
+        video.playbackRate = speed;
+        speedBtn.textContent = button.textContent;
+    });
+});
+
+document.getElementById('screenshot').addEventListener('click', () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    
+    const link = document.createElement('a');
+    link.download = 'screenshot.png';
+    link.href = canvas.toDataURL();
+    link.click();
+    
+    showNotification('動画をスクショしました');
+});
+
+        document.getElementById('popup').addEventListener('click', () => {
+            const video = document.getElementById('video');
+            if (video.src) {
+                const currentTime = video.currentTime;
+                
+                video.pause();
+
+                const popup = window.open('', 'videoPopup', 'width=800,height=600');
+                popup.document.open();
+                popup.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>8313動画player</title>
+                        <style>
+                            body { margin: 0; background: black; }
+                            video { width: 100%; height: 100vh; }
+                        </style>
+                    </head>
+                    <body>
+                        <video src="${video.src}" controls autoplay></video>
+                        <script>
+                            document.querySelector('video').currentTime = ${currentTime};
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                popup.document.close();
+            } else {
+                alert('動画を選択してください');
+            }
+        });
+
+document.getElementById('theater').addEventListener('click', () => {
+    videoContainer.classList.toggle('theater-mode');
+});
+
+document.getElementById('fullscreen').addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        videoContainer.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'k') {
+        e.preventDefault();
+    }
+
+    if (e.key === ' ' || e.key === 'k') togglePlay();
+    if (e.key === 'j') video.currentTime -= 10;
+    if (e.key === 'l') video.currentTime += 10;
+    if (e.key === 'ArrowLeft') video.currentTime -= 5;
+    if (e.key === 'ArrowRight') video.currentTime += 5;
+    
+    if (video.paused) {
+        if (e.key === ',') video.currentTime -= 1/30;
+        if (e.key === '.') video.currentTime += 1/30;
+    }
+
+    if (e.key === 'm') {
+        video.muted = !video.muted;
+        updateVolumeIcon();
+    }
+    if (e.key === 'ArrowUp') {
+        video.volume = Math.min(1, video.volume + 0.05);
+        volumeSlider.value = video.volume * 100;
+        updateVolumeIcon();
+    }
+    if (e.key === 'ArrowDown') {
+        video.volume = Math.max(0, video.volume - 0.05);
+        volumeSlider.value = video.volume * 100;
+        updateVolumeIcon();
+    }
+
+    if (e.key === '>' && e.shiftKey) {
+        const speeds = [0.5, 1, 1.5, 2];
+        const currentIndex = speeds.indexOf(video.playbackRate);
+        if (currentIndex < speeds.length - 1) {
+            video.playbackRate = speeds[currentIndex + 1];
+            speedBtn.textContent = speeds[currentIndex + 1] + 'x';
+        }
+    }
+    if (e.key === '<' && e.shiftKey) {
+        const speeds = [0.5, 1, 1.5, 2];
+        const currentIndex = speeds.indexOf(video.playbackRate);
+        if (currentIndex > 0) {
+            video.playbackRate = speeds[currentIndex - 1];
+            speedBtn.textContent = speeds[currentIndex - 1] + 'x';
+        }
+    }
+
+    if (e.key >= '0' && e.key <= '9') {
+        const percent = parseInt(e.key) * 10;
+        video.currentTime = (video.duration * percent) / 100;
+    }
+    if (e.key === 'Home') video.currentTime = 0;
+    if (e.key === 'End') video.currentTime = video.duration;
+
+    if (e.key === 'f') {
+        if (!document.fullscreenElement) {
+            videoContainer.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+    if (e.key === 't') {
+        videoContainer.classList.toggle('theater-mode');
+    }
+    if (e.key === 'i') {
+        if (document.pictureInPictureElement) {
+            document.exitPictureInPicture();
+        } else {
+            video.requestPictureInPicture();
+        }
+    }
+});
+const notification = document.getElementById('notification');
+
+function showNotification(message) {
+    notification.textContent = message;
+    notification.style.transform = 'translateX(0)';
+    notification.style.opacity = '1';
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(150%)';
+        notification.style.opacity = '0';
+    }, 3000);
+}
+    </script>
+</body>
+</html>

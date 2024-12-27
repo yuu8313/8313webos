@@ -1,0 +1,42 @@
+@import './base.css';
+@import './animations.css';
+
+.loading {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.notification {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  transition: top 0.3s ease;
+  border: 1px solid rgba(155, 135, 245, 0.2);
+}
+
+.notification.show {
+  top: 20px;
+  animation: slideDown 0.3s ease forwards;
+}
+
+.result-card {
+  text-align: center;
+}
+
+#qrcode {
+  margin: 2rem auto;
+  padding: 1rem;
+  background: white;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0 5px 15px rgba(155, 135, 245, 0.2);
+}

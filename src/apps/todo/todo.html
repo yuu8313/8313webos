@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mac風 Todo メモ</title>
+    <style>
+        :root {
+            --bg-dark: #1e1e1e;
+            --text-light: #ffffff;
+            --accent: #007AFF;
+            --danger: #FF3B30;
+            --success: #34C759;
+            --warning: #FF9500;
+            --window-bg: rgba(28, 28, 30, 0.95);
+            --input-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--window-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-select {
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 13px;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .sort-select option {
+            background: var(--window-bg);
+            color: var(--text-light);
+        }
+
+        .task-form {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        input, select {
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        input[type="time"] {
+            width: 120px;
+        }
+
+        select {
+            appearance: none;
+            padding-right: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+        }
+
+        select option {
+            background: var(--window-bg);
+            color: var(--text-light);
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        button:hover {
+            background: rgba(0, 122, 255, 0.8);
+            transform: translateY(-1px);
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .task-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .task-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .task-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .task-deadline {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+        }
+
+        .priority-high { border-left: 3px solid var(--danger); }
+        .priority-medium { border-left: 3px solid var(--warning); }
+        .priority-low { border-left: 3px solid var(--success); }
+
+        .delete-btn {
+            background: var(--danger);
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 59, 48, 0.8);
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            appearance: none;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .checkbox:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .checkbox:checked::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            left: 4px;
+            top: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .task-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .task-item {
+                grid-template-columns: auto 1fr;
+                grid-template-rows: auto auto;
+            }
+            
+            .task-actions {
+                grid-column: 1 / -1;
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">📝 Todo メモ</h1>
+            <div class="sort-controls">
+                <select id="sortSelect" class="sort-select">
+                    <option value="priority">優先度順</option>
+                    <option value="deadline">期限が近い順</option>
+                    <option value="newest">新しい順</option>
+                </select>
+            </div>
+        </div>
+
+        <form class="task-form" id="taskForm">
+            <input type="text" id="taskInput" placeholder="新しいタスクを入力..." required>
+            <input type="date" id="dateInput" required>
+            <input type="time" id="timeInput" required>
+            <select id="priorityInput" required>
+                <option value="low">低</option>
+                <option value="medium">中</option>
+                <option value="high">高</option>
+            </select>
+            <button type="submit">追加</button>
+        </form>
+
+        <div class="task-list" id="taskList"></div>
+    </div>
+
+    <script>
+        class TodoApp {
+            constructor() {
+                this.tasks = JSON.parse(localStorage.getItem('todoAppTasks')) || [];
+                this.taskForm = document.getElementById('taskForm');
+                this.taskList = document.getElementById('taskList');
+                this.sortSelect = document.getElementById('sortSelect');
+                
+                this.init();
+            }
+
+            init() {
+                this.taskForm.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.sortSelect.addEventListener('change', () => this.renderTasks());
+                this.renderTasks();
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                
+                const task = {
+                    id: Date.now(),
+                    text: document.getElementById('taskInput').value,
+                    date: document.getElementById('dateInput').value,
+                    time: document.getElementById('timeInput').value,
+                    priority: document.getElementById('priorityInput').value,
+                    completed: false,
+                    created: new Date().toISOString()
+                };
+
+                this.tasks.push(task);
+                this.saveTasks();
+                this.renderTasks();
+                this.taskForm.reset();
+            }
+
+            toggleTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.saveTasks();
+                    this.renderTasks();
+                }
+            }
+
+            deleteTask(id) {
+                this.tasks = this.tasks.filter(t => t.id !== id);
+                this.saveTasks();
+                this.renderTasks();
+            }
+
+            saveTasks() {
+                localStorage.setItem('todoAppTasks', JSON.stringify(this.tasks));
+            }
+
+            sortTasks(tasks) {
+                const sortMethod = this.sortSelect.value;
+                return [...tasks].sort((a, b) => {
+                    if (a.completed !== b.completed) {
+                        return a.completed ? 1 : -1;
+                    }
+
+                    switch (sortMethod) {
+                        case 'priority':
+                            const priorityOrder = { high: 0, medium: 1, low: 2 };
+                            return priorityOrder[a.priority] - priorityOrder[b.priority];
+                        case 'deadline':
+                            const dateA = new Date(`${a.date}T${a.time}`);
+                            const dateB = new Date(`${b.date}T${b.time}`);
+                            return dateA - dateB;
+                        case 'newest':
+                            return new Date(b.created) - new Date(a.created);
+                        default:
+                            return 0;
+                    }
+                });
+            }
+
+            renderTasks() {
+                this.taskList.innerHTML = '';
+                const sortedTasks = this.sortTasks(this.tasks);
+
+                sortedTasks.forEach(task => {
+                    const taskElement = document.createElement('div');
+                    taskElement.className = `task-item priority-${task.priority} ${task.completed ? 'completed' : ''}`;
+                    
+                    taskElement.innerHTML = `
+                        <input type="checkbox" class="checkbox" ${task.completed ? 'checked' : ''}>
+                        <div class="task-content">
+                            <span class="task-text">${task.text}</span>
+                            <span class="task-deadline">期限: ${task.date} ${task.time}</span>
+                        </div>
+                        <span>${this.getPriorityLabel(task.priority)}</span>
+                        <button class="delete-btn">削除</button>
+                    `;
+
+                    const checkbox = taskElement.querySelector('.checkbox');
+                    checkbox.addEventListener('change', () => this.toggleTask(task.id));
+
+                    const deleteBtn = taskElement.querySelector('.delete-btn');
+                    deleteBtn.addEventListener('click', () => this.deleteTask(task.id));
+
+                    this.taskList.appendChild(taskElement);
+                });
+            }
+
+            getPriorityLabel(priority) {
+                const labels = {
+                    low: '低',
+                    medium: '中',
+                    high: '高'
+                };
+                return labels[priority] || priority;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new TodoApp();
+        });
+    </script>
+</body>
+</html>

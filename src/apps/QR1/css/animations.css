@@ -1,0 +1,191 @@
+/* Base Animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(155, 135, 245, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(155, 135, 245, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(155, 135, 245, 0.2);
+  }
+}
+
+/* Enhanced Button Animations */
+@keyframes pulseScale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Loading Animation */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(155,135,245,0.1);
+  border-left-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Button Animations */
+.generate-btn,
+.download-btn,
+.regenerate-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.generate-btn:hover,
+.download-btn:hover,
+.regenerate-btn:hover {
+  animation: pulseScale 1s ease infinite;
+  background: linear-gradient(90deg, 
+    var(--accent) 0%, 
+    var(--accent-dark) 50%, 
+    var(--accent) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Input Animations */
+input:focus,
+select:focus {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Card Animations */
+.glass-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(155, 135, 245, 0.3);
+}
+
+/* QR Code Generation Animation */
+@keyframes qrAppear {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+#qrcode img {
+  animation: qrAppear 0.5s ease-out forwards;
+}
+
+/* Notification Animation */
+@keyframes notificationSlide {
+  0% {
+    transform: translateY(-100%) translateX(-50%);
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(20px) translateX(-50%);
+    opacity: 1;
+  }
+  90% {
+    transform: translateY(20px) translateX(-50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%) translateX(-50%);
+    opacity: 0;
+  }
+}
+
+.notification.show {
+  animation: notificationSlide 3s ease-in-out forwards;
+}
+
+/* Icon Animations */
+@keyframes iconBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.fas {
+  transition: transform 0.3s ease;
+}
+
+.generate-btn:hover .fas,
+.download-btn:hover .fas,
+.regenerate-btn:hover .fas {
+  animation: iconBounce 1s infinite;
+}
+
+/* Form Element Focus Effects */
+input[type="text"]:focus,
+input[type="range"]:focus,
+input[type="color"]:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Range Input Thumb Animation */
+input[type="range"]::-webkit-slider-thumb {
+  transition: transform 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Color Input Animation */
+input[type="color"] {
+  transition: transform 0.3s ease;
+}
+
+input[type="color"]:hover {
+  transform: scale(1.1);
+}
