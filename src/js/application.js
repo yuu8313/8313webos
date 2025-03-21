@@ -15,8 +15,7 @@ class ApplicationManager {
             { id: 'forudakaisou', name: 'フォルダー階層メモ', path: 'src/apps/folderkaisou/index.html', icon: '📁', iconType: 'emoji' },
             { id: 'mozisuukauntoandmozitikan', name: 'カウント&置換', path: 'src/apps/mozikaunntoandmozitikan/index.html', icon: 'A', iconType: 'emoji' },
             { id: 'video', name: 'videoplayer', path: 'src/apps/video/index.html', icon: 'src/image/icon30.png', iconType: 'image' },
-            { id: 'qrsakusei', name: 'QRコード作成', path: 'src/apps/QR1/index.html', icon: '📱', iconType: 'emoji' },
-            { id: 'qrsayomikomi', name: 'QRコード読み込み', path: 'src/apps/QR2/index.html', icon: '📱', iconType: 'emoji' },
+            { id: 'qrsakusei', name: 'QRコードアプリ', path: 'src/apps/QR1/index.html', icon: '📱', iconType: 'emoji' }, 
             { id: 'zip', name: 'ZIP解凍', path: 'src/apps/zip/index.html', icon: '📦', iconType: 'emoji' },
 
             { id: 'perplexity', name: 'Perplexity', path: 'https://www.perplexity.ai/', icon: 'src/linkicon/perplexity.png', iconType: 'image', directRedirect: true }
