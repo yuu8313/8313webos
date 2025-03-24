@@ -17,7 +17,7 @@ class ApplicationManager {
             { id: 'video', name: 'videoplayer', path: 'src/apps/video/index.html', icon: 'src/image/icon30.png', iconType: 'image' },
             { id: 'qrsakusei', name: 'QRコードアプリ', path: 'src/apps/QR1/index.html', icon: '📱', iconType: 'emoji' }, 
             { id: 'zip', name: 'ZIP解凍', path: 'src/apps/zip/index.html', icon: '📦', iconType: 'emoji' },
-
+            { id: 'osero', name: 'Osero', path: 'src/apps/osero/index.html', icon: '●', iconType: 'emoji' },
             { id: 'perplexity', name: 'Perplexity', path: 'https://www.perplexity.ai/', icon: 'src/linkicon/perplexity.png', iconType: 'image', directRedirect: true }
         ];
         
